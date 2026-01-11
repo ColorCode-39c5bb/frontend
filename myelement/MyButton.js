@@ -1,5 +1,4 @@
 export default function MyButton(){
-	// return HTMLElement.call(this);
 	return Reflect.construct(HTMLElement, [], MyButton);
 };
 Object.setPrototypeOf(MyButton.prototype, HTMLElement.prototype);

@@ -1,15 +1,6 @@
-import MyButton from "./MyButton.js";
 import Final from "./Final.js";
 import Abstract from "./Abstract.js";
 import Some from "./Some.js";
-
-const shadowRoot = document.getElementById("shadow-root").attachShadow({mode: "open"});
-const mybutton1 = new MyButton();
-mybutton1.style.backgroundColor = "red";
-mybutton1.innerText = "这是一个按钮";
-shadowRoot.appendChild(mybutton1);
-
-// shadowRoot.appendChild(Reflect.construct(HTMLElement, [], MyButton));
 
 console.log(new Final()); //pass
 console.log(Final.call(new Final())); //pass
