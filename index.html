@@ -3,292 +3,78 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Home</title>
+<script>
+HTMLElement.prototype.shadowStyleInit = function(){
+	this.shadowRoot.styleSheets[this.shadowRoot.styleSheets.length - 1].insertRule(`
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+	`);
+}
+function NotSlotted(){
+	const instance = Reflect.construct(HTMLElement, [], NotSlotted);
+	instance.appendChild(document.importNode(document.getElementById("not-slotted").content, true));
+	return instance;
+}
+Object.setPrototypeOf(NotSlotted.prototype, HTMLElement.prototype);
+customElements.define("not-slotted", NotSlotted);
+</script>
+	<script type="module" src="./myelement/BackgroundImage.js"></script>
+		<script type="module" src="./myelement/loadanimation/ImageLoadAnimation.js"></script>
+	<script type="module" src="./myelement/NavigationBar.js"></script>
+	<script type="module" src="./myelement/NavigationPage.js"></script>
 	<script type="module" src="./main.js"></script>
+	<script type="module" src="./myelement/RemoteElement.js"></script>
+		
 <style>
 *{
+	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+}
+body{
+	position: relative;
+	height: 100%;
+	width: 100%;
 }
 </style>
 </head>
 <body>
-	<div id="shadow-root"></div>
-	<iframe src="outer.html" frameborder="0"></iframe>
+	<remote-element 
+		url="http://localhost:3000/api/components/element1" 
+		version="1.0.0" 
+		userConnectedCallback="connectedCallback1"
+		dataurl="http://violetgarden.cn:8080/blog/tags"
+		templateparser="TemplateParser"
+		innerhtmlparser="InnerHTMLParser"
+		>
+	</remote-element>
+	<background-image src="Reflect_construct.png" load-animation="spinner"></background-image>
+	<navigation-bar>
+		<span slot="logo">VG</span>
+		<navigation-page slot="navigation-page">
+			<span slot="logo">VG</span>
+			<a href="#">Home</a>
+			<a href="#">About</a>
+			<a href="#">Blog</a>
+		</navigation-page>
+	</navigation-bar>
 </body>
 </html>
 
-<template id="load-animation">
-  <style>
-    /* 图片加载动画容器 */
-    .image-loader {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      width: var(--loader-size, 64px);
-      height: var(--loader-size, 64px);
-    }
-
-    /* 骨架屏加载器 */
-    .loader-skeleton {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        var(--skeleton-color, #f0f0f0) 25%,
-        var(--skeleton-highlight, #e0e0e0) 50%,
-        var(--skeleton-color, #f0f0f0) 75%
-      );
-      background-size: 200% 100%;
-      border-radius: var(--loader-radius, 8px);
-      animation: skeleton-wave 1.5s ease-in-out infinite;
-    }
-
-    /* 脉冲加载器 */
-    .loader-pulse {
-      width: 100%;
-      height: 100%;
-      border-radius: var(--loader-radius, 8px);
-      background: var(--pulse-color, #e0e0e0);
-      animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    /* 旋转加载器 */
-    .loader-spinner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .loader-spinner::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 70%;
-      height: 70%;
-      margin: -35% 0 0 -35%;
-      border: 3px solid transparent;
-      border-top-color: var(--spinner-color, #3498db);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    .loader-spinner::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 50%;
-      height: 50%;
-      margin: -25% 0 0 -25%;
-      border: 3px solid transparent;
-      border-top-color: var(--spinner-color, #3498db);
-      border-radius: 50%;
-      animation: spin 0.5s linear infinite reverse;
-    }
-
-    /* 图片形状加载器 */
-    .loader-image-shape {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--loader-radius, 8px);
-      background: var(--shape-bg, #f5f5f5);
-    }
-
-    .loader-image-shape::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-      );
-      animation: shimmer 1.5s infinite;
-    }
-
-    /* 进度条加载器 */
-    .loader-progress {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .loader-progress-bar {
-      width: 80%;
-      height: 4px;
-      background: var(--progress-bg, #e0e0e0);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .loader-progress-fill {
-      width: 30%;
-      height: 100%;
-      background: var(--progress-color, #3498db);
-      border-radius: 2px;
-      animation: progress-move 2s ease-in-out infinite;
-    }
-
-    .loader-progress-text {
-      font-size: 12px;
-      color: var(--text-color, #666);
-      font-family: sans-serif;
-    }
-
-    /* 网格加载器 */
-    .loader-grid {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 4px;
-    }
-
-    .loader-grid-cell {
-      background: var(--grid-color, #3498db);
-      border-radius: 2px;
-      animation: grid-pulse 1.4s ease-in-out infinite;
-    }
-
-    .loader-grid-cell:nth-child(1) { animation-delay: 0s; }
-    .loader-grid-cell:nth-child(2) { animation-delay: 0.1s; }
-    .loader-grid-cell:nth-child(3) { animation-delay: 0.2s; }
-    .loader-grid-cell:nth-child(4) { animation-delay: 0.1s; }
-    .loader-grid-cell:nth-child(5) { animation-delay: 0.2s; }
-    .loader-grid-cell:nth-child(6) { animation-delay: 0.3s; }
-    .loader-grid-cell:nth-child(7) { animation-delay: 0.2s; }
-    .loader-grid-cell:nth-child(8) { animation-delay: 0.3s; }
-    .loader-grid-cell:nth-child(9) { animation-delay: 0.4s; }
-
-    /* 自定义图标加载器 */
-    .loader-custom {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .loader-custom::before {
-      content: '📷';
-      font-size: 24px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: bounce 0.6s ease-in-out infinite alternate;
-    }
-
-    /* 动画定义 */
-    @keyframes skeleton-wave {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    @keyframes shimmer {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    @keyframes progress-move {
-      0% { transform: translateX(-100%); }
-      50% { transform: translateX(200%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    @keyframes grid-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.9); }
-    }
-
-    @keyframes bounce {
-      0% { transform: translate(-50%, -50%) scale(1); }
-      100% { transform: translate(-50%, -50%) scale(1.2); }
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-      .image-loader {
-        --loader-size: 48px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .image-loader {
-        --loader-size: 32px;
-      }
-    }
-
-    /* 暗色模式支持 */
-    @media (prefers-color-scheme: dark) {
-      .image-loader {
-        --skeleton-color: #2a2a2a;
-        --skeleton-highlight: #3a3a3a;
-        --pulse-color: #3a3a3a;
-        --spinner-color: #4dabf7;
-        --shape-bg: #2a2a2a;
-        --progress-bg: #3a3a3a;
-        --progress-color: #4dabf7;
-        --text-color: #aaa;
-        --grid-color: #4dabf7;
-      }
-    }
-  </style>
-
-  <!-- 加载器容器和所有类型 -->
-  <div class="image-loader">
-    <!-- 默认显示旋转加载器 -->
-    <div class="loader-spinner" aria-label="图片加载中"></div>
-    
-    <!-- 其他类型（初始隐藏） -->
-    <div class="loader-skeleton" style="display: none;" aria-label="图片加载中"></div>
-    <div class="loader-pulse" style="display: none;" aria-label="图片加载中"></div>
-    <div class="loader-image-shape" style="display: none;" aria-label="图片加载中"></div>
-    
-    <!-- 网格加载器 -->
-    <div class="loader-grid" style="display: none;" aria-label="图片加载中">
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-      <div class="loader-grid-cell"></div>
-    </div>
-    
-    <!-- 进度条加载器 -->
-    <div class="loader-progress" style="display: none;" aria-label="图片加载中">
-      <div class="loader-progress-bar">
-        <div class="loader-progress-fill"></div>
-      </div>
-      <div class="loader-progress-text">加载中...</div>
-    </div>
-    
-    <!-- 自定义加载器 -->
-    <div class="loader-custom" style="display: none;" aria-label="图片加载中"></div>
-  </div>
+<template id="not-slotted">
+<div class="not-slotted">
+	<slot name="not-slotted-warn">未插入内容</slot>
+</div>
+<style>
+	.not-slotted{
+		width: 100%; height: 100%;
+		text-align: center;
+		font-size: larger;
+		color: #666;
+	}
+</style>
 </template>

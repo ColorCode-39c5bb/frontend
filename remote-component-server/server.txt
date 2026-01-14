@@ -1,0 +1,31 @@
+server/
+	package.json
+	server.js
+	conponents/
+		element1/
+			element1.json
+				{
+					"type": "template"
+					"template": "template.html"
+					"scripturl": ""这里可以是任何网络地址，但是我有index.js所以把网络路径配置成能获取到下面的index.js，域名都用localhost
+				}
+			index.js
+			template.html
+		element2/
+			element2.json
+				{
+					"type": "innerHTML"
+					"template": "innerHtml.html"
+					"scripturl": ""这里可以是任何网络地址，但是我有index.js所以把网络路径配置成能获取到下面的index.js，域名都用localhost
+				}
+			index.js
+			innerHtml.html
+		element3/
+			element3.json
+				{
+					"type": "html"
+					"template": "iframe.html"
+					"scripturl": ""这里可以是任何网络地址，但是我有index.j，s所以把网络路径配置成能获取到下面的index.js，域名都用localhost
+				}
+			index.js
+			iframe.html

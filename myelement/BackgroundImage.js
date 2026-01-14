@@ -1,32 +1,75 @@
 import templatePromise from "../template.js";
-import LoadAnimation from "./LoadAnimation.js";
 
 export default function BackgroundImage(){
 	const instance = Reflect.construct(HTMLElement, [], BackgroundImage);
-	const loadAnimation1 = new LoadAnimation(),
-		loadAnimation2 = new LoadAnimation(),
-		loadAnimation3 = new LoadAnimation(),
-		loadAnimation4 = new LoadAnimation(),
-		loadAnimation5 = new LoadAnimation(),
-		loadAnimation6 = new LoadAnimation(),
-		loadAnimation7 = new LoadAnimation();
+	instance.image = null;
+	instance.loadAnimation = null;
 
-	// ['spinner', 'skeleton', 'pulse', 'grid', 'progress', 'image-shape', 'custom']
-	loadAnimation1.setAttribute('type', 'grid');
-	loadAnimation2.setAttribute('type', 'spinner');
-	loadAnimation3.setAttribute('type', 'skeleton');
-	loadAnimation4.setAttribute('type', 'pulse');
-	loadAnimation5.setAttribute('type', 'progress');
-	loadAnimation6.setAttribute('type', 'image-shape');
-	loadAnimation7.setAttribute('type', 'custom');
-	instance.append(loadAnimation1, loadAnimation2, loadAnimation3, loadAnimation4, loadAnimation5, loadAnimation6, loadAnimation7);
-	
-	// templatePromise.then(templateDocument => {
-	// 	loadAnimation.remove();
-	// 	instance.appendChild(templateDocument.getElementById("background-image").content.cloneNode(true));
-	// });
+	let heightScrollable = 0;
+	instance.resize = function(){
+		const image = instance.image;
+		if(image == null) return;
+		const htmlClientRadio = document.documentElement.clientWidth/document.documentElement.clientHeight,
+			imageNaturalRadio = image.naturalWidth/image.naturalHeight;
+		if(htmlClientRadio>imageNaturalRadio) {image.style.width = "100%"; image.style.height = "";}
+		else {image.style.height = "100%"; image.style.width = "";}
+		heightScrollable = document.documentElement.clientHeight - image.clientHeight;
+	}
+	let lastScrollY = 0;
+	instance.scroll = function(){
+		const image = instance.image;
+		if(image == null) return;
+		const scrollY = window.scrollY;
+		image.style.filter = `blur(${Math.min(5, scrollY/100)}px)`;
+		const deltaY = scrollY - lastScrollY;
+		const top = instance.image.style.top.replace("px", "");
+		image.style.top = `${Math.min(0, Math.max(heightScrollable, top-deltaY))}px`;
+		lastScrollY = scrollY;
+	}
+	instance.templatePromise = templatePromise.then(
+		templateDocument => {
+			instance.attachShadow({mode: "open"});
+			const documentFragment = templateDocument.getElementById("background-image").content.cloneNode(true);
+			const image = documentFragment.querySelector("img");
+			instance.loadAnimation = documentFragment.querySelector("image-load-animation");
+			
+			image.addEventListener("load", function(){
+				instance.loadAnimation.style.display = "none";
+				this.style.display = "";
+				instance.resize();
+			});
+			instance.shadowRoot.appendChild(documentFragment);
+			instance.image = image;
+			instance.templatePromise = null;
+
+			window.addEventListener("resize", instance.resize);
+			window.addEventListener("scroll", instance.scroll);
+		}, 
+		error => {
+			console.error('加载模板失败:', error);
+			instance.templatePromise = null;
+			clearTimeout(instance.attributeChangedCallbackTimeout);
+			instance.attributeChangedCallbackTimeout = null;
+		}
+	)
 	return instance;
 }
 Object.setPrototypeOf(BackgroundImage.prototype, HTMLElement.prototype);
-BackgroundImage.observedAttributes = ["src"];
+Object.defineProperty(BackgroundImage, "observedAttributes", {get: function() {return ["src"];}});
+
+BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, newValue) {
+	if(this.templatePromise != null) {
+		this.attributeChangedCallbackTimeout = setTimeout(this.attributeChangedCallback.bind(this, name, oldValue, newValue), 500);
+		return;
+	}
+	switch (name) {
+		case "src":
+			this.image.src = newValue;
+			this.image.style.display = "none";
+			this.image.style.width = ""; this.image.style.height = "";
+			this.loadAnimation.style.display = "";
+			break;
+	}
+}
+
 customElements.define("background-image", BackgroundImage);

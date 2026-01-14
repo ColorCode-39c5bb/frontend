@@ -1,0 +1,16 @@
+<template>
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      background: white;
+    }
+    h2 { color: #333; }
+  </style>
+  <div class="card">
+    <h2>Element 1 - Template组件</h2>
+    <p>这是一个template类型的远程组件</p>
+    <slot name="content">默认内容</slot>
+  </div>
+</template>
