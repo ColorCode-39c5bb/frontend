@@ -1,5 +1,5 @@
 {
-  "type": "innerHTML",
-  "template": "innerHtml.html",
-  "scripturl": "http://localhost:3000/components/element2/index.js"
+	"tagname": "element-2",
+	"template": "template.html",
+	"scripturl": null
 }

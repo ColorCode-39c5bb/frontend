@@ -5,14 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Home</title>
 <script>
-HTMLElement.prototype.shadowStyleInit = function(){
-	this.shadowRoot.styleSheets[this.shadowRoot.styleSheets.length - 1].insertRule(`
+HTMLElement.prototype.initShadowStyle = function(){
+	if(this.shadowRoot == null) return;
+	const defaultStyleSheet = new CSSStyleSheet();
+	defaultStyleSheet.insertRule(`
 		*{
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
 		}
 	`);
+	this.shadowRoot.adoptedStyleSheets.push(defaultStyleSheet);
 }
 function NotSlotted(){
 	const instance = Reflect.construct(HTMLElement, [], NotSlotted);
@@ -22,8 +25,8 @@ function NotSlotted(){
 Object.setPrototypeOf(NotSlotted.prototype, HTMLElement.prototype);
 customElements.define("not-slotted", NotSlotted);
 </script>
-	<script type="module" src="./myelement/BackgroundImage.js"></script>
-		<script type="module" src="./myelement/loadanimation/ImageLoadAnimation.js"></script>
+	<!-- <script type="module" src="./myelement/BackgroundImage.js"></script>
+		<script type="module" src="./myelement/loadanimation/ImageLoadAnimation.js"></script> -->
 	<script type="module" src="./myelement/NavigationBar.js"></script>
 	<script type="module" src="./myelement/NavigationPage.js"></script>
 	<script type="module" src="./main.js"></script>
@@ -43,16 +46,28 @@ body{
 </style>
 </head>
 <body>
-	<remote-element 
-		url="http://localhost:3000/api/components/element1" 
-		version="1.0.0" 
-		userConnectedCallback="connectedCallback1"
-		dataurl="http://violetgarden.cn:8080/blog/tags"
-		templateparser="TemplateParser"
-		innerhtmlparser="InnerHTMLParser"
-		>
+	<remote-element elementurl="http://localhost:3000/api/components/element1" connectedcallback="myconnectedCallback">
+		<element-1 dataurl="http://violetgarden.cn:8080/blog/profile?id=1"></element-1>
 	</remote-element>
-	<background-image src="Reflect_construct.png" load-animation="spinner"></background-image>
+	<remote-element elementurl="http://localhost:3000/api/components/element1" connectedcallback="myconnectedCallback">
+		<element-1 dataurl="http://violetgarden.cn:8080/blog/tags"></element-1>
+	</remote-element>
+	<remote-element elementurl="http://localhost:3000/api/components/element1" connectedcallback="myconnectedCallback">
+		<element-1 dataurl="http://violetgarden.cn:8080/blog/tags"></element-1>
+	</remote-element>
+	<remote-element elementurl="http://localhost:3000/api/components/element1" connectedcallback="myconnectedCallback">
+		<element-1 dataurl="http://violetgarden.cn:8080/blog/tags"></element-1>
+	</remote-element>
+	<remote-element elementurl="http://localhost:3000/api/components/element2">
+	</remote-element>
+	<remote-element elementurl="http://localhost:3000/api/components/background-image">
+		<background-image src="Reflect_construct.png">
+			<remote-element elementurl="http://localhost:3000/api/components/image-load-animation">
+				<image-load-animation slot="load-animation" type="spinner"></image-load-animation>
+			</remote-element>
+		</background-image>
+	</remote-element>
+	<!-- <background-image src="Reflect_construct.png" load-animation="spinner"></background-image> -->
 	<navigation-bar>
 		<span slot="logo">VG</span>
 		<navigation-page slot="navigation-page">

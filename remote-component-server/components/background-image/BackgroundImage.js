@@ -1,16 +1,10 @@
-import templatePromise from "../template.js";
-templatePromise.then((templateDocument)=>{
-	BackgroundImage.template = templateDocument.getElementById("background-image");
-	customElements.define("background-image", BackgroundImage);
-});
-
 export default function BackgroundImage(){
 	const instance = Reflect.construct(HTMLElement, [], BackgroundImage);
 	instance.image = null;
 	instance.loadAnimation = null;
 	instance.attachShadow({mode: "open"});
 	instance.initShadowStyle();
-		
+
 	let heightScrollable = 0;
 	instance.resize = function(){
 		const image = instance.image;
@@ -35,7 +29,6 @@ export default function BackgroundImage(){
 	const fragment = BackgroundImage.template.content.cloneNode(true);
 	const image = fragment.querySelector("img");
 	instance.loadAnimation = fragment.querySelector("image-load-animation");
-	
 	image.addEventListener("load", function(){
 		instance.loadAnimation.style.display = "none";
 		this.style.display = "";
@@ -43,6 +36,7 @@ export default function BackgroundImage(){
 	});
 	instance.shadowRoot.appendChild(fragment);
 	instance.image = image;
+	image.src = instance.getAttribute("src");
 	instance.templatePromise = null;
 
 	window.addEventListener("resize", instance.resize);
@@ -53,12 +47,9 @@ Object.setPrototypeOf(BackgroundImage.prototype, HTMLElement.prototype);
 Object.defineProperty(BackgroundImage, "observedAttributes", {get: function() {return ["src"];}});
 
 BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, newValue) {
-	// if(this.templatePromise != null) {
-	// 	this.attributeChangedCallbackTimeout = setTimeout(this.attributeChangedCallback.bind(this, name, oldValue, newValue), 500);
-	// 	return;
-	// }
 	switch (name) {
 		case "src":
+			if(!(newValue&&oldValue)) return;
 			this.image.src = newValue;
 			this.image.style.display = "none";
 			this.image.style.width = ""; this.image.style.height = "";

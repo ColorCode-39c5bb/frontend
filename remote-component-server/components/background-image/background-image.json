@@ -1,0 +1,5 @@
+{
+	"tagname": "background-image",
+	"template": "background-image.html",
+	"scripturl": "http://localhost:3000/components/background-image/BackgroundImage.js"
+}

@@ -123,7 +123,7 @@ const server = http.createServer((req, res) => {
                             const config = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
                             return {
                                 name,
-                                type: config.type,
+                                tagname: config.tagname || name,
                                 description: config.description || `${name} 组件`,
                                 url: `http://localhost:${PORT}/api/components/${name}`
                             };
@@ -169,7 +169,7 @@ const server = http.createServer((req, res) => {
             
             try {
                 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-                const { type, template } = config;
+                const { tagname, template } = config;
                 
                 // 读取模板文件
                 const templatePath = path.join(componentDir, template);
@@ -181,7 +181,7 @@ const server = http.createServer((req, res) => {
                 
                 // 构建响应数据
                 const response = {
-                    type: type,
+					tagname: tagname || componentName,
                     text: templateContent,
                     scripturl: config.scripturl || ''
                 };

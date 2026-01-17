@@ -1,14 +1,17 @@
 import templatePromise from "../template.js";
-import ShadowElement from "./ShadowElement.js";
+templatePromise.then((templateDocument)=>{
+	NavigationPage.template = templateDocument.getElementById("navigation-page");
+	customElements.define("navigation-page", NavigationPage);
+});
 
-export default class NavigationPage extends ShadowElement {
+export default class NavigationPage extends HTMLElement{
 static get observedAttributes() {return [];}
 
-constructor() { super(); 
-	templatePromise.then(templateDocument => {
-		const documentFragment = templateDocument.getElementById("navigation-page").content.cloneNode(true);
-		this.shadowRoot.appendChild(documentFragment);
-	});
+constructor() { super();
+	this.attachShadow({mode: "open"});
+	this.initShadowStyle();
+	const fragment = NavigationPage.template.content.cloneNode(true);
+	this.shadowRoot.appendChild(fragment);
 }
 
 connectedCallback() {
@@ -18,4 +21,3 @@ connectedCallback() {
 attributeChangedCallback(name, oldValue, newValue) {
 }
 }
-customElements.define("navigation-page", NavigationPage);

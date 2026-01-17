@@ -1,9 +1,3 @@
-import {getTemplate} from "../../template.js";
-getTemplate(import.meta.url, "load-animation-template.html").then((templateDocument)=>{
-	ImageLoadAnimation.template = templateDocument.getElementById("image-load-animation");
-	customElements.define("image-load-animation", ImageLoadAnimation);
-});
-
 export default class ImageLoadAnimation extends HTMLElement {
 static get observedAttributes() {
 	return ['type', 'size', 'color', 'radius'];

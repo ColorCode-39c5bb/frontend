@@ -1,14 +1,15 @@
 import templatePromise from "../template.js";
+templatePromise.then((templateDocument)=>{
+	ArticleCard.template = templateDocument.getElementById("article-card");
+	customElements.define("article-card", ArticleCard);
+});
 
 export default class ArticleCard extends HTMLElement {
 static get observedAttributes() {return [];}
 
 constructor() {
 	super(); this.attachShadow({mode: "open"});
-	templatePromise.then(templateDocument => {
-		const documentFragment = templateDocument.getElementById("article-card").content.cloneNode(true);
-		this.shadowRoot.appendChild(documentFragment);
-	});
+	const fragment = ArticleCard.template.content.cloneNode(true);
+	this.shadowRoot.appendChild(fragment);
 }
 }
-customElements.define("article-card", ArticleCard);
