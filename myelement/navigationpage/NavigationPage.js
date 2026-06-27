@@ -1,5 +1,5 @@
-import templatePromise from "../template.js";
-templatePromise.then((templateDocument)=>{
+import {getTemplate} from "../../template.js";
+getTemplate(import.meta.url, "navigation-page-template.html").then((templateDocument)=>{
 	NavigationPage.template = templateDocument.getElementById("navigation-page");
 	customElements.define("navigation-page", NavigationPage);
 });
@@ -9,13 +9,12 @@ static get observedAttributes() {return [];}
 
 constructor() { super();
 	this.attachShadow({mode: "open"});
-	this.initShadowStyle();
-	const fragment = NavigationPage.template.content.cloneNode(true);
+	this.initShadowRoot();
+	const fragment = NavigationPage.template.content;
 	this.shadowRoot.appendChild(fragment);
 }
 
 connectedCallback() {
-
 }
 
 attributeChangedCallback(name, oldValue, newValue) {

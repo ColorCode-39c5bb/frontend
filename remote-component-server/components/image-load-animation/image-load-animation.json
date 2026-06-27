@@ -1,5 +1,0 @@
-{
-	"tagname": "image-load-animation",
-	"template": "template.html",
-	"scripturl": "http://localhost:3000/components/image-load-animation/ImageLoadAnimation.js"
-}

@@ -7,8 +7,9 @@ templatePromise.then((templateDocument)=>{
 export default class ArticleCard extends HTMLElement {
 static get observedAttributes() {return [];}
 
-constructor() {
-	super(); this.attachShadow({mode: "open"});
+constructor() { super(); 
+	this.attachShadow({mode: "open"});
+	this.initShadowRoot();
 	const fragment = ArticleCard.template.content.cloneNode(true);
 	this.shadowRoot.appendChild(fragment);
 }

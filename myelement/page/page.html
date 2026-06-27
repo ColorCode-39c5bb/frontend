@@ -1,0 +1,89 @@
+<template id="page-article">
+<h1 style="text-align: center;">{{ article.title }}</h1>
+<div class="article-info">
+    <span>发布 {{ article.create_date }}</span>
+    <span>更新 {{ article.update_date }}</span>
+    <span><i class="fas fa-eye"></i> {{ article.read }} 阅读</span>
+</div>
+<!-- 封面图 -->
+<img style="width: 100%; border-radius: 8px; margin: 30px 0;" :src="server +'/'+ article.cover" alt="文章封面">
+<!-- 文章内容 -->
+<div v-html="article.content"></div>
+<!-- 文章标签 -->
+<div id="articleTagBox" style="margin: 30px 0;">
+    <div class="tag" v-for="tag in article.tags" :key="tag.id">
+        <span>{{ tag.tagname }}</span>  
+    </div>
+</div>
+<!-- 操作按钮 -->
+<div class="article-actions">
+    <button class="like-btn" :class="{ 'liked': true }">
+        <i class="fas fa-heart"></i> {{ true ? '已赞' : '点赞' }} ({{ article.like }})
+    </button>
+    <button class="share-btn">
+        <i class="fas fa-share-alt"></i> 分享
+    </button>
+    <!-- <button class="bookmark-btn" :class="{ 'bookmarked': true }">
+        <i class="fas fa-bookmark"></i> {{ true ? '已收藏' : '收藏' }}
+    </button> -->
+</div>
+</template>
+
+
+<template id="page-home">
+	<background-image src="http://localhost:5500/resource/u=2757702891,4065448673&fm=253&app=138&f=PNG.png" load-animation="spinner"></background-image>
+	<text-typing id="welcome" typeinterval="200"></text-typing>
+<style>
+#welcome{
+	display: block;
+	width: 95%;
+	margin: 0 auto;
+	padding: 50vh 0;
+	font-size: xxx-large;
+	text-align: center;
+}
+</style>
+</template>
+
+
+<template id="page-about"></template>
+
+
+<template id="page-blog">
+<background-image src="http://localhost:5500/resource/1650206891050.png" load-animation="spinner"></background-image>
+<section id="board">
+	<textarea name="keyword" id="searchbox"></textarea>
+</section>
+<section id="main">
+	<slot name="blog-navigation"></slot>
+	<slot id="blog-content"></slot>
+</section>
+<style>
+	#board{
+		height: 100vh; width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	#searchbox{
+		flex-basis: 70%;
+		box-shadow: var(--box-shadow-small);
+	}
+	#main{
+		position: relative;
+	}
+	::slotted([slot="blog-navigation"]){
+		display: block;
+		position: sticky;
+		top: 0;
+		left: 10%;
+		width: 30%;
+	}
+	::slotted([slot="blog-content"]){
+		position: absolute;
+		top: 0;
+		right: 10%;
+		width: 60%;
+	}
+</style>
+</template>

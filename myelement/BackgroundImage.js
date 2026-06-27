@@ -6,18 +6,18 @@ templatePromise.then((templateDocument)=>{
 
 export default function BackgroundImage(){
 	const instance = Reflect.construct(HTMLElement, [], BackgroundImage);
+	instance.attachShadow({mode: "open"});
+	instance.initShadowRoot();
 	instance.image = null;
 	instance.loadAnimation = null;
-	instance.attachShadow({mode: "open"});
-	instance.initShadowStyle();
+	instance.imageNaturalRadio = 1;
 		
 	let heightScrollable = 0;
 	instance.resize = function(){
 		const image = instance.image;
 		if(image == null) return;
-		const htmlClientRadio = document.documentElement.clientWidth/document.documentElement.clientHeight,
-			imageNaturalRadio = image.naturalWidth/image.naturalHeight;
-		if(htmlClientRadio>imageNaturalRadio) {image.style.width = "100%"; image.style.height = "";}
+		const htmlClientRadio = document.documentElement.clientWidth/document.documentElement.clientHeight;
+		if(htmlClientRadio>instance.imageNaturalRadio) {image.style.width = "100%"; image.style.height = "";}
 		else {image.style.height = "100%"; image.style.width = "";}
 		heightScrollable = document.documentElement.clientHeight - image.clientHeight;
 	}
@@ -39,6 +39,7 @@ export default function BackgroundImage(){
 	image.addEventListener("load", function(){
 		instance.loadAnimation.style.display = "none";
 		this.style.display = "";
+		instance.imageNaturalRadio = image.naturalWidth/image.naturalHeight;
 		instance.resize();
 	});
 	instance.shadowRoot.appendChild(fragment);

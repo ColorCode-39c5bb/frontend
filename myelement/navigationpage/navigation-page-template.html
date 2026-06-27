@@ -1,0 +1,114 @@
+<template id="navigation-page">
+	<p><slot name="logo"><not-slotted>未插入LOGO</not-slotted></slot></p>
+	<slot id="items"><not-slotted>未插入导航项</not-slotted></slot>
+<style>
+	:host{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		width: 100%; height: 100%;
+		background-color: antiquewhite;
+		box-shadow: var(--box-shadow-large);
+	}
+	::slotted(:not([slot="logo"])){
+		display: block;
+		width: 100%;
+		text-align: center;
+		padding: 12px 24px !important;
+		color: #333;
+		text-decoration: none;
+		transition: all 0.3s ease-in-out;
+	}
+	::slotted(:not([slot="logo"]):hover){
+		background-color: #f0f0f0;
+		box-shadow: var(--box-shadow-small);
+		border-radius: 20px;
+	}
+	p{
+		font-size: larger;
+		font-weight: bold;
+		margin: 20px 0;
+	}
+</style>
+</template>
+
+
+<template id="time-navigation-page">
+<div id="container">
+	<canvas></canvas>
+</div>
+<style>
+	#container{
+		position: relative;
+	}
+	canvas{
+		position: fixed;
+		top: 0; left: 0;
+	}
+</style>
+</template>
+
+
+<template id="time-navigation-page-with-svg">
+<div id="container">
+<svg><g>
+	<circle id="edge" cx="50%" cy="50%" r="1500" stroke="black" stroke-width="4"/>
+	<g id="hour">
+		<g id="hour-markers"></g>
+		<circle cx="50%" cy="50%" r="1450" stroke="black" stroke-width="10"/>
+	</g>
+	<circle id="minute" cx="50%" cy="50%" r="1430" stroke="red" stroke-width="7"/>
+	<circle id="second" cx="50%" cy="50%" r="1410" stroke="black" stroke-width="4"/>
+	<polygon id="pointer" points="0,0 -50,-86 50,-86" stroke="red" stroke-width="4"/>
+</g></svg>
+<div id="navigation-item-container">
+	<slot id="navigation-item">
+		<not-slotted>未插入导航项</not-slotted>
+	</slot>
+</div>
+</div>
+<style>
+#container{
+	position: fixed;
+	top: 0; left: 0;
+}
+svg{
+	width: 100vw; height: 100vh;
+	overflow: visible;
+	z-index: -1;
+}
+g{
+	fill: none;
+	transform-origin: center center;
+}
+circle:not(#edge){
+	stroke-dasharray: var(--dasharray);
+	stroke-dashoffset: calc(var(--dasharray)/2);
+	transform-origin: center center;
+}
+polygon{
+	transform: translate(50%, 231%);
+}
+#navigation-item-container{
+	position: fixed;
+	top: 0; left: 0;
+	width: 100vw; height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+::slotted(a){
+	display: inline-block;
+	width: 200px; height: 200px;
+	margin: 10px !important;
+	text-align: center;
+	border: 2px solid red;
+	color: black;
+	font-size: larger;
+	border-radius: 50%;
+	box-shadow: var(--box-shadow-small);
+	line-height: 200px !important;
+}
+</style>
+</template>
