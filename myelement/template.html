@@ -22,10 +22,7 @@
 </a>
 <span id="current-page-bar" style="text-align: center;">Home</span>
 <button id="page-button" style="text-align: right;">OO</button>
-<div id="navigation-page" style="display: none; flex-grow: 0;">
-	<div id="filter"></div>
-	<slot name="navigation-page"></slot>
-</div>
+<slot name="navigation-page"></slot>
 <style>
 	:host{
 		width: 100%;
@@ -43,6 +40,9 @@
 		flex-basis: 0;
 		flex-grow: 1;
 	}
+	::slotted(navigation-page:not(:popover-open)) {
+		display: none;
+	}
 	::slotted(navigation-page){
 		width: 80vw; height: 90vh;
 		position: fixed;
@@ -50,12 +50,8 @@
 		left: 10vw;
 		border-radius: 10px;
 	}
-	#filter{
-		width: 100vw; height: 100vh;
-		position: fixed;
-		top: 0px; left: 0px;
-		background-color: rgba(0, 0, 0, 0.5);
-		z-index: -1;
+	::slotted(navigation-page)::backdrop{
+		background-color: rgba(0, 0, 0, 50%);
 	}
 </style>
 </template>
@@ -64,7 +60,9 @@
 <template id="article-card">
 <div id="title" style="height: 100px;">标题</div>
 <div id="preview" style="height: 100px;">预览</div>
-<div id="tags">标签</div>
+<div id="tags">
+	<div class="tag"></div>
+</div>
 <img id="cover" src="http://localhost:5500/resource/Reflect_construct.png">
 <style>
 :host{
@@ -117,5 +115,28 @@
 	display: inline-block;
 	width: 5px;
 }
+</style>
+</template>
+
+<template id="about-card">
+<h2 id="title"></h2>
+<div id="content"></div>
+<style>
+	:host{
+		display: block;
+	    padding: 25px !important;
+	    border-radius: 8px;
+	    box-shadow: var(--box-shadow-middle);
+	}
+	h2 {
+		padding-bottom: 10px;
+	    border-bottom: 1px solid black;
+	}
+	#content > ul{
+		padding-left: 25px;
+	}
+	#content li{
+	    margin-top: 20px;
+	}
 </style>
 </template>

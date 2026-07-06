@@ -10,39 +10,32 @@ static get observedAttributes() {return ["currentPage"];}
 constructor() { super(); 
 	this.attachShadow({mode: "open"});
 	this.initShadowRoot();
-	const fragment = NavigationBar.template.content.cloneNode(true);
-	this.currentPageBar = fragment.getElementById("current-page-bar");
-	this.switchButton = fragment.getElementById("page-button");
-	this.navigationpage_container = fragment.getElementById("navigation-page");
-	this.navigationpage_container.filter = fragment.getElementById("filter");
+	this.shadowRoot.appendChild(NavigationBar.template.content.cloneNode(true));
 
-	this.shadowRoot.appendChild(fragment);
-}
 
-	
-attributeChangedCallback(name, oldValue, newValue) {
-	switch (name) {
-		case "currentPage":
-			if(oldValue == null) break; //第一次加载
-			this.currentPageBar.innerText = newValue;
-			break;
-	}
-}
+	const currentPageBar = this.shadowRoot.getElementById("current-page-bar"),
+		switchButton = this.shadowRoot.getElementById("page-button"),
+		navigationpage = this.querySelector("[slot='navigation-page']");
 
-connectedCallback() {
-	this.switchButton.addEventListener("click", (e)=>{
-		this.navigationpage_container.style.display = this.navigationpage_container.style.display == "none" ? "block" : "none";
-	});
-	this.navigationpage_container.addEventListener("click", function(e){
-		if(e.target == this.filter) this.style.display = "none";
+	navigationpage.setAttribute("popover", "");
+	switchButton.addEventListener("click", (e)=>{
+		navigationpage.showPopover();
 	});
 	window.addEventListener("mousemove", (e)=>{
 		if(e.clientY < 33) this.style.top = "0px";
 		if(e.clientY > 60) this.style.top = "-66px";
 	});	
 	window.addEventListener("routechange", (e)=>{
-		this.currentPageBar.innerText = window.history.state.currentPage;
-		this.navigationpage_container.style.display = "none";
+		currentPageBar.innerText = window.history.state.currentPage;
+		navigationpage.hidePopover();
 	});
+}
+
+	
+attributeChangedCallback(name, oldValue, newValue) {
+}
+
+connectedCallback() {
+
 }
 }

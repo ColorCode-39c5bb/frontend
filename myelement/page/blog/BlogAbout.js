@@ -7,11 +7,10 @@ export default function BlogAbout(){
 	const _this = Reflect.construct(HTMLElement, [], BlogAbout);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
-	
-	const fragment = BlogAbout.template.content.cloneNode(true);
-	//一系列初始化操作
-	
-	_this.shadowRoot.appendChild(fragment);
+	_this.shadowRoot.appendChild(BlogAbout.template.content.cloneNode(true));
+	_this.followup={
+		item: _this.querySelector("[slot='item']"),
+	};
 	return _this;
 }
 BlogAbout.tagname = "blog-about";
@@ -28,4 +27,8 @@ BlogAbout.prototype.disconnectedCallback = function(){
 }
 BlogAbout.prototype.adoptedCallback = function(){
 	
+}
+BlogAbout.prototype.reactiverender = function(){
+	this.followup.item.reactiverefresh_for(this.reactivedata);
+	this.followup.item.reactiverender_for(this.followup.item.reactiverender);
 }

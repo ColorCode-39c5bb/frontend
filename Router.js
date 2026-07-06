@@ -28,8 +28,10 @@ export default function Router(config_route) {
 Router.prototype.render = function() {
 	const topath = window.location.pathname;
 	const target = this.Ns_link_target.get(topath);
-	if(target != target.target_container.firstElementChild)
+	if(target != target.target_container.firstElementChild){
 		target.target_container.replaceChildren(target);
+		target.reactiverender?.call(target);
+	}
 	window.dispatchEvent(new Event("routechange"));
 }
 

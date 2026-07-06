@@ -6,9 +6,12 @@
 	<title>Home</title>
 	<style>
 		:root{
-			--box-shadow-small: 0 0 5px rgba(204, 133, 255, 0.3);
+			/*--box-shadow-small: 0 0 5px rgba(204, 133, 255, 0.3);
 			--box-shadow-middle: 0 0 10px rgba(204, 133, 255, 0.5);
-			--box-shadow-large: 0 0 15px rgba(204, 133, 255, 0.7);
+			--box-shadow-large: 0 0 15px rgba(204, 133, 255, 0.7);*/
+			--box-shadow-small: 0 0 5px rgba(0, 0, 0, 0.3);
+			--box-shadow-middle: 0 0 10px rgba(0, 0, 0, 0.5);
+			--box-shadow-large: 0 0 15px rgba(0, 0, 0, 0.7);
 		}
 		*{
 			box-sizing: border-box;
@@ -36,20 +39,21 @@
 </navigation-bar>
 <main slot="main">
 	<page-home route="/blog"></page-home>
-	<page-about route="/about"></page-about>
+	<page-about route="/about">
+		<about-card slot="item"></about-card>
+	</page-about>
 	<page-blog route="/">
-		<blog-navigation slot="blog-navigation" js-data>
-			<img slot="profile" src="http://localhost:5500/resource/Reflect_construct.png">
-			<p slot="nick" js-data="nick" js-text></p>
-			<text-typing slot="signature" js-data="signatures" typeinterval="500"></text-typing>
+		<blog-navigation slot="navigation">
 			<a route="/blog/home">首页</a>
 			<a route="/blog/about">关于</a>
 		</blog-navigation>
-		<section js-data="about">
+		<section slot="content">
 			<blog-home route="/blog/home">
-				<article-card slot="blog-item"></article-card>
+				<article-card slot="item"></article-card>
 			</blog-home>
-			<blog-about route="/blog/about" js-data></blog-about>
+			<blog-about route="/blog/about">
+				<about-card slot="item"></about-card>
+			</blog-about>
 		</section>
 	</page-blog>
 </main>

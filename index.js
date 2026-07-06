@@ -11,6 +11,7 @@ import NavigationPage from "./myelement/navigationpage/NavigationPage.js"
 import ArticleCard from "./myelement/ArticleCard.js";
 import BlogNavigation from "./myelement/page/blog/BlogNavigation.js";
 import TextTyping from "./myelement/TextTyping.js";
+import AboutCard from "./myelement/AboutCard.js";
 
 
 
@@ -21,42 +22,25 @@ HTMLElement.prototype.initShadowRoot = function(){
 	if(this.shadowRoot == null) return;
 	this.shadowRoot.adoptedStyleSheets.push(defaultStyleSheet);
 }
-HTMLElement.prototype.reactiverefresh = function(reactivedata){
-	this.reactivedata = reactivedata;
-	const getdata = function(js_x){
-		let rd = reactivedata;
-		for(const key of js_x.split(".")) rd = rd[key];
-		return rd;
-	}
-
-	this.querySelectorAll(":scope > [js-for]").forEach((el)=>{
-		const jsfor = el.getAttribute("js-for");
-		const array = jsfor==""? reactivedata : getdata(jsfor);
-		const parent = el.parentElement,
-			samelevel = parent.querySelectorAll(`:scope > [js-for="${el.getAttribute("js-for")}"]`);
-		let last = null;
-		for(let i=0; i<array.length; i++){
-			let next = samelevel[i];
-			if(next==null){
-				next = el.cloneNode(true);
-				last.after(next);
-			}
-			this.reactiverefresh.call(next, array[i]);
-			if(el.reactivedatarender) el.reactivedatarender(array[i]);
-			last = next;
+HTMLElement.prototype.reactiverefresh_for = function(rdarray){
+	if(!this.Ns_for) this.Ns_for = [this];
+	let last = null;
+	for(let i=0; i<rdarray.length; i++){
+		let next = this.Ns_for[i];
+		if(next==null){
+			next = this.cloneNode(true);
+			last.after(next);
+			this.Ns_for.push(next);
 		}
+		next.reactivedata = rdarray[i];
+		last = next;
+	}
+}
+HTMLElement.prototype.reactiverender_for = function(reactiverender){
+	this.Ns_for.forEach((el)=>{
+		reactiverender.call(el);
 	});
-	this.querySelectorAll(":scope > [js-data]").forEach((el)=>{
-		const jsdata = el.getAttribute("js-data");
-		const rd = jsdata==""? reactivedata : getdata(jsdata);
-		this.reactiverefresh.call(el, rd);
-		if(el.reactivedatarender) el.reactivedatarender(rd);
-	});
-	
-	const jstext =  this.getAttribute("js-text");
-	if(jstext) this.innerText = getdata(jstext);
-	else if(jstext=="") this.innerText = reactivedata;
-};
+}
 
 
 window.router = new Router(config_route);

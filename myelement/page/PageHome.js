@@ -10,7 +10,7 @@ export default function PageHome(){
 	
 	const fragment = PageHome.template.content.cloneNode(true);
 	//一系列初始化操作
-	fragment.getElementById("welcome").reactivedata = [
+	fragment.getElementById("greeting").reactivedata = [
 		"Welcome",
 		"There is Not Violet in Garden"
 	];
