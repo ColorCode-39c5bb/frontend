@@ -1,4 +1,4 @@
-export default fetch("./myelement/template.html")
+const templatePromise = fetch("./myelement/template.html")
 .then(response => {
 	if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 	return response.text();
@@ -7,13 +7,19 @@ export default fetch("./myelement/template.html")
 
 const requestCache = new Map();
 
-export function getTemplate(moduleImportMetaUrl, templateRelativePath){
+function getTemplate(moduleImportMetaUrl, templateRelativePath){
 	const templateURL = new URL(templateRelativePath, moduleImportMetaUrl).href;
 	if(requestCache.has(templateURL)) return requestCache.get(templateURL);
-	return fetch(templateURL).then(response => response.text())
+	const promise = fetch(templateURL)
+		.then(response => response.text())
 		.then(text => new DOMParser().parseFromString(text, "text/html"))
-		.then(templateDocument => {
-			requestCache.set(templateURL, templateDocument);
-			return templateDocument;
-		});
+	requestCache.set(templateURL, promise);
+	return promise;
+}
+
+export default templatePromise;
+export {
+	templatePromise,
+	getTemplate,
+	requestCache,
 }

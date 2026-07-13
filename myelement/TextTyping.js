@@ -1,33 +1,48 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
 	TextTyping.template = templateDocument.getElementById("text-typing");
-	customElements.define(TextTyping.tagname, TextTyping);
+	customElements.define(TextTyping.template.id, TextTyping);
 });
 export default function TextTyping(){
 	const _this = Reflect.construct(HTMLElement, [], TextTyping);
 	_this.attachShadow({mode: "open"});
+	_this.data_default = [
+		"TextTyping: No Text"
+	];
 	_this.initShadowRoot();
 	
 	_this.input_interval = null, _this.cursor_interval = null;
-	
-	const fragment = TextTyping.template.content.cloneNode(true);
 	//一系列初始化操作
-	_this.input = fragment.getElementById("input");
-	_this.cursor = fragment.getElementById("cursor");
-	_this.shadowRoot.appendChild(fragment);
+	_this.input = _this.shadowRoot.getElementById("input");
+	_this.cursor = _this.shadowRoot.getElementById("cursor");
 	return _this;
 }
-TextTyping.tagname = "text-typing";
 Object.setPrototypeOf(TextTyping.prototype, HTMLElement.prototype);
-Object.defineProperty(TextTyping.prototype, "observedAttributes", {get: function() {return ["value"]}});
+Object.setPrototypeOf(TextTyping, HTMLElement);
+Object.defineProperty(TextTyping, "observedAttributes", {get: function() {return ["value"]}});
 TextTyping.prototype.connectedCallback = function(){
+
+}
+TextTyping.prototype.attributeChangedCallback = function(name, oldValue, newValue){
+	
+}
+TextTyping.prototype.disconnectedCallback = function(){
+}
+TextTyping.prototype.adoptedCallback = function(){
+	
+}
+
+TextTyping.prototype.reactiverender = HTMLElement.render_isConnected(function(rd){
+	clearInterval(this.input_interval);
+	clearInterval(this.cursor_interval);
+
 	let textindex = 0, charindex = 0;
 	this.input_interval = setInterval(() => {
-		if(!this.reactivedata?.length) return;
-		const currenttext = this.reactivedata[textindex];
+		if(!rd?.length) return;
+		const currenttext = rd[textindex];
 		if(charindex>currenttext.length){
 			textindex++; charindex=0;
-			if(!this.reactivedata[textindex]){
+			if(!rd[textindex]){
 				textindex=0;
 			}
 		}
@@ -39,14 +54,4 @@ TextTyping.prototype.connectedCallback = function(){
 		this.cursor.innerText = cursorblink ? "_" : "";
 		cursorblink = !cursorblink;
 	}, 513);
-}
-TextTyping.prototype.attributeChangedCallback = function(name, oldValue, newValue){
-	
-}
-TextTyping.prototype.disconnectedCallback = function(){
-	clearInterval(this.input_interval);
-	clearInterval(this.cursor_interval);
-}
-TextTyping.prototype.adoptedCallback = function(){
-	
-}
+})

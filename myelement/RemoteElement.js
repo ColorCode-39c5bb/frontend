@@ -3,6 +3,7 @@ globalThis.RemoteElement = function(){
 	return instance;
 }
 Object.setPrototypeOf(RemoteElement.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(RemoteElement, HTMLElement);
 
 
 Object.defineProperty(RemoteElement, "requestCache", {value: new Map(), configurable: false, writable: false});

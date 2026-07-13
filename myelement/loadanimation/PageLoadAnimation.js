@@ -7,7 +7,7 @@ getTemplate(import.meta.url, "load-animation-template.html").then((templateDocum
 export default function PageLoadAnimation() {
 	const instance = Reflect.construct(HTMLElement, [], this.constructor);
 	instance.attachShadow({mode: "open"});
-	instance.shadowRoot.appendChild(PageLoadAnimation.template.content);
 	return instance;
 }
 Object.setPrototypeOf(PageLoadAnimation.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(PageLoadAnimation, HTMLElement);

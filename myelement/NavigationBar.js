@@ -10,7 +10,6 @@ static get observedAttributes() {return ["currentPage"];}
 constructor() { super(); 
 	this.attachShadow({mode: "open"});
 	this.initShadowRoot();
-	this.shadowRoot.appendChild(NavigationBar.template.content.cloneNode(true));
 
 
 	const currentPageBar = this.shadowRoot.getElementById("current-page-bar"),

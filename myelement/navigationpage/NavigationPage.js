@@ -10,8 +10,6 @@ static get observedAttributes() {return [];}
 constructor() { super();
 	this.attachShadow({mode: "open"});
 	this.initShadowRoot();
-	const fragment = NavigationPage.template.content;
-	this.shadowRoot.appendChild(fragment);
 }
 
 connectedCallback() {

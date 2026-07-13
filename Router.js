@@ -22,15 +22,16 @@ export default function Router(config_route) {
 	});
 
 	window.addEventListener("popstate", this.render.bind(this), false);
-	window.addEventListener("load", this.render.bind(this), false);
+	//window.addEventListener("load", this.render.bind(this), false);
 }
 
 Router.prototype.render = function() {
 	const topath = window.location.pathname;
-	const target = this.Ns_link_target.get(topath);
-	if(target != target.target_container.firstElementChild){
+	const patharray = topath.split("/");
+	for(let i=1, path="/"+patharray[i]; i<patharray.length; i++, path+=("/"+patharray[i])){
+		const target = this.Ns_link_target.get(path);	
+		if(!target || target.isConnected) continue;
 		target.target_container.replaceChildren(target);
-		target.reactiverender?.call(target);
 	}
 	window.dispatchEvent(new Event("routechange"));
 }

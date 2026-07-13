@@ -7,14 +7,10 @@ export default function NotSlotted(){
 	const _this = Reflect.construct(HTMLElement, [], NotSlotted);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
-	
-	const fragment = NotSlotted.template.content.cloneNode(true);
-	//一系列初始化操作
-	
-	_this.shadowRoot.appendChild(fragment);
 	return _this;
 }
 Object.setPrototypeOf(NotSlotted.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(NotSlotted, HTMLElement);
 Object.defineProperty(NotSlotted.prototype, "observedAttributes", {get: function() {return ["value"]}});
 NotSlotted.prototype.connectedCallback = function(){
 	

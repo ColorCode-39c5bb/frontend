@@ -5,52 +5,51 @@ templatePromise.then((templateDocument)=>{
 });
 
 export default function BackgroundImage(){
-	const instance = Reflect.construct(HTMLElement, [], BackgroundImage);
-	instance.attachShadow({mode: "open"});
-	instance.initShadowRoot();
-	instance.image = null;
-	instance.loadAnimation = null;
-	instance.imageNaturalRadio = 1;
+	const _this = Reflect.construct(HTMLElement, [], BackgroundImage);
+	_this.attachShadow({mode: "open"});
+	_this.initShadowRoot();
+	_this.image = null;
+	_this.loadAnimation = null;
+	_this.imageNaturalRadio = 1;
 		
 	let heightScrollable = 0;
-	instance.resize = function(){
-		const image = instance.image;
+	_this.resize = function(){
+		const image = _this.image;
 		if(image == null) return;
 		const htmlClientRadio = document.documentElement.clientWidth/document.documentElement.clientHeight;
-		if(htmlClientRadio>instance.imageNaturalRadio) {image.style.width = "100%"; image.style.height = "";}
+		if(htmlClientRadio>_this.imageNaturalRadio) {image.style.width = "100%"; image.style.height = "";}
 		else {image.style.height = "100%"; image.style.width = "";}
 		heightScrollable = document.documentElement.clientHeight - image.clientHeight;
 	}
 	let lastScrollY = 0;
-	instance.scroll = function(){
-		const image = instance.image;
+	_this.scroll = function(){
+		const image = _this.image;
 		if(image == null) return;
 		const scrollY = window.scrollY;
 		image.style.filter = `blur(${Math.min(5, scrollY/100)}px)`;
 		const deltaY = scrollY - lastScrollY;
-		const top = instance.image.style.top.replace("px", "");
+		const top = _this.image.style.top.replace("px", "");
 		image.style.top = `${Math.min(0, Math.max(heightScrollable, top-deltaY))}px`;
 		lastScrollY = scrollY;
 	}
-	const fragment = BackgroundImage.template.content.cloneNode(true);
-	const image = fragment.querySelector("img");
-	instance.loadAnimation = fragment.querySelector("image-load-animation");
+	const image = _this.shadowRoot.querySelector("img");
+	_this.loadAnimation = _this.shadowRoot.querySelector("image-load-animation");
 	
 	image.addEventListener("load", function(){
-		instance.loadAnimation.style.display = "none";
+		_this.loadAnimation.style.display = "none";
 		this.style.display = "";
-		instance.imageNaturalRadio = image.naturalWidth/image.naturalHeight;
-		instance.resize();
+		_this.imageNaturalRadio = image.naturalWidth/image.naturalHeight;
+		_this.resize();
 	});
-	instance.shadowRoot.appendChild(fragment);
-	instance.image = image;
-	instance.templatePromise = null;
+	_this.image = image;
+	_this.templatePromise = null;
 
-	window.addEventListener("resize", instance.resize);
-	window.addEventListener("scroll", instance.scroll);
-	return instance;
+	window.addEventListener("resize", _this.resize);
+	window.addEventListener("scroll", _this.scroll);
+	return _this;
 }
 Object.setPrototypeOf(BackgroundImage.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(BackgroundImage, HTMLElement);
 Object.defineProperty(BackgroundImage, "observedAttributes", {get: function() {return ["src"];}});
 
 BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, newValue) {

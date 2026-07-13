@@ -61,6 +61,7 @@ export default function TimeNavigationPageWithSVG(){
 	return instance;
 }
 Object.setPrototypeOf(TimeNavigationPageWithSVG.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(TimeNavigationPageWithSVG, HTMLElement);
 
 TimeNavigationPageWithSVG.prototype.connectedCallback = function() {
 	const interval = 1/45*1000;

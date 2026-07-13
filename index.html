@@ -12,6 +12,7 @@
 			--box-shadow-small: 0 0 5px rgba(0, 0, 0, 0.3);
 			--box-shadow-middle: 0 0 10px rgba(0, 0, 0, 0.5);
 			--box-shadow-large: 0 0 15px rgba(0, 0, 0, 0.7);
+			--color-hover: #c0d9f5;
 		}
 		*{
 			box-sizing: border-box;
@@ -25,9 +26,27 @@
 			cursor: pointer;
 		}
 	</style>
+	<script>
+		HTMLElement.render_isConnected = function(render){
+			return function(rd){
+				if(rd===undefined) return; //增量刷新
+				if(rd===null) rd = structuredClone(this.data_default); //全量刷新
+				this.reactiverefresh(rd);
+				if(!this.isConnected) return;
+				render.call(this, rd);
+			}
+		}
+		HTMLElement.connected_withFirst = function(connectedCallback){
+			return function(){
+				if(this.is_first_connected) this.first_connected();
+				this.is_first_connected = false;
+				connectedCallback.call(this);
+			}
+		}
+	</script>
 	<script type="module" src="./index.js"></script>
 </head>
-<body><app-main>
+<body><app-main id="app-main">
 <navigation-bar slot="navigation">
 	<span slot="logo">VG</span>
 	<navigation-page slot="navigation-page">
@@ -38,11 +57,11 @@
 	</navigation-page>
 </navigation-bar>
 <main slot="main">
-	<page-home route="/blog"></page-home>
+	<page-home route="/"></page-home>
 	<page-about route="/about">
 		<about-card slot="item"></about-card>
 	</page-about>
-	<page-blog route="/">
+	<page-blog route="/blog">
 		<blog-navigation slot="navigation">
 			<a route="/blog/home">首页</a>
 			<a route="/blog/about">关于</a>
@@ -50,12 +69,14 @@
 		<section slot="content">
 			<blog-home route="/blog/home">
 				<article-card slot="item"></article-card>
+				<default-pagination slot="pagination"></default-pagination>
 			</blog-home>
 			<blog-about route="/blog/about">
 				<about-card slot="item"></about-card>
 			</blog-about>
 		</section>
 	</page-blog>
+	<page-article route="/article"></page-article>
 </main>
 <footer slot="footer"></footer>
 </app-main></body>

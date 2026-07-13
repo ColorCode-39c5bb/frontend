@@ -16,6 +16,7 @@ export default function TimeNavigationPage(){
 	return instance;
 }
 Object.setPrototypeOf(TimeNavigationPage.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(TimeNavigationPage, HTMLElement);
 
 TimeNavigationPage.prototype.resize = function() {
 	this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight;

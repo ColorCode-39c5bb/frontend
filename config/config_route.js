@@ -17,9 +17,6 @@ export default [
 {
 	path: "/blog",
 	state: {currentPage: "Blog"},
-	call: function(){
-		window.router.replace("/blog/home");
-	},
 	routes: [
 		{
 			path: "/blog/home",

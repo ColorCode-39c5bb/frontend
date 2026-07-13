@@ -1,9 +1,14 @@
 
 <template id="blog-home">
-	<slot name="item"></slot>
-	<slot name="pagination">
-		<not-slotted>未插入页码栏</not-slotted>
-	</slot>
+<slot name="item"></slot>
+<slot name="pagination">
+	<not-slotted>未插入页码栏</not-slotted>
+</slot>
+<style>
+::slotted([slot="item"]){
+	margin-bottom: 35px !important;
+}
+</style>
 </template>
 
 <template id="blog-navigation">
@@ -45,8 +50,8 @@
 <template id="blog-about">
 	<slot name="item"></slot>
 <style>
-	::slotted([slot="item"]){
-		margin-bottom: 35px !important;
-	}
+::slotted([slot="item"]){
+	margin-bottom: 35px !important;
+}
 </style>
 </template>

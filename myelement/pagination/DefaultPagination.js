@@ -7,16 +7,15 @@ export default function DefaultPagination(){
 	const _this = Reflect.construct(HTMLElement, [], DefaultPagination);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
-	
-	const fragment = DefaultPagination.template.content.cloneNode(true);
-	//一系列初始化操作
-	
-	_this.shadowRoot.appendChild(fragment);
+	_this.followup = {
+		
+	}
 	return _this;
 }
 DefaultPagination.tagname = "default-pagination";
 Object.setPrototypeOf(DefaultPagination.prototype, HTMLElement.prototype);
-Object.defineProperty(DefaultPagination.prototype, "observedAttributes", {get: function() {return ["value"]}});
+Object.setPrototypeOf(DefaultPagination, HTMLElement);
+Object.defineProperty(DefaultPagination, "observedAttributes", {get: function() {return ["value"]}});
 DefaultPagination.prototype.connectedCallback = function(){
 	
 }
