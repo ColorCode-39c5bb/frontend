@@ -1,15 +1,14 @@
 import {getTemplate} from "../../../template.js";
 getTemplate(import.meta.url, "blog.html").then((templateDocument)=>{
 	BlogAbout.template = templateDocument.getElementById("blog-about");
-	customElements.define(BlogAbout.template.id, BlogAbout);
+	window.constructor_withTemplate.push(BlogAbout);
 });
 export default function BlogAbout(){
 	const _this = Reflect.construct(HTMLElement, [], BlogAbout);
 	_this.attachShadow({mode: "open"});
-	_this.data_default = [];
 	_this.initShadowRoot();
 	
-	_this.followup={
+	_this.els_tooperate={
 		item: _this.querySelector("[slot='item']"),
 	};
 	return _this;
@@ -29,7 +28,7 @@ BlogAbout.prototype.disconnectedCallback = function(){
 BlogAbout.prototype.adoptedCallback = function(){
 	
 }
-BlogAbout.prototype.reactiverender = HTMLElement.render_isConnected(function(rd){
-	const {item} = this.followup;
+BlogAbout.prototype.reactiverender = function(rd){
+	const {item} = this.els_tooperate;
 	item.reactiverender_for(rd, item.reactiverender);
-})
+}

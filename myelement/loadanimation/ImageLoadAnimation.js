@@ -1,7 +1,7 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "load-animation-template.html").then((templateDocument)=>{
 	ImageLoadAnimation.template = templateDocument.getElementById("image-load-animation");
-	customElements.define("image-load-animation", ImageLoadAnimation);
+	window.constructor_withTemplate.push(ImageLoadAnimation);
 });
 
 export default class ImageLoadAnimation extends HTMLElement {

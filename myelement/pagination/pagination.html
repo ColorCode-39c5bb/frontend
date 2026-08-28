@@ -1,13 +1,29 @@
 <template id="default-pagination">
-<span class="actionbutton" style="position: absolute; left: 10%; padding-right: 3px;"> ◀ </span>
+<span class="actionbutton" id="prev"> ◀ </span>
 <div id="pager_box">
 	<span class="pager"></span>
 </div>
-<span class="actionbutton" style="position: absolute; right: 10%; padding-left: 3px;"> ▶ </span>
+<span class="actionbutton" id="next"> ▶ </span>
 <style>
 :host{
 	display: block;
 	position: relative;
+	text-align: center;
+}
+
+#pager_box{
+	display: inline-block;
+}
+.pager{
+	display: inline-block;
+	min-width: 20px;
+}
+.currentpage{
+	font-size: 200%;
+	aspect-ratio: 1;
+}
+.actionbutton{
+	cursor: pointer;
 }
 </style>
 </template>

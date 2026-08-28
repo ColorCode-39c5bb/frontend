@@ -6,9 +6,6 @@
 	<title>Home</title>
 	<style>
 		:root{
-			/*--box-shadow-small: 0 0 5px rgba(204, 133, 255, 0.3);
-			--box-shadow-middle: 0 0 10px rgba(204, 133, 255, 0.5);
-			--box-shadow-large: 0 0 15px rgba(204, 133, 255, 0.7);*/
 			--box-shadow-small: 0 0 5px rgba(0, 0, 0, 0.3);
 			--box-shadow-middle: 0 0 10px rgba(0, 0, 0, 0.5);
 			--box-shadow-large: 0 0 15px rgba(0, 0, 0, 0.7);
@@ -26,27 +23,9 @@
 			cursor: pointer;
 		}
 	</style>
-	<script>
-		HTMLElement.render_isConnected = function(render){
-			return function(rd){
-				if(rd===undefined) return; //增量刷新
-				if(rd===null) rd = structuredClone(this.data_default); //全量刷新
-				this.reactiverefresh(rd);
-				if(!this.isConnected) return;
-				render.call(this, rd);
-			}
-		}
-		HTMLElement.connected_withFirst = function(connectedCallback){
-			return function(){
-				if(this.is_first_connected) this.first_connected();
-				this.is_first_connected = false;
-				connectedCallback.call(this);
-			}
-		}
-	</script>
 	<script type="module" src="./index.js"></script>
 </head>
-<body><app-main id="app-main">
+<body><app-main id="appmain">
 <navigation-bar slot="navigation">
 	<span slot="logo">VG</span>
 	<navigation-page slot="navigation-page">

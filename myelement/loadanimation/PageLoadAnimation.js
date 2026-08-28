@@ -1,7 +1,7 @@
 import { getTemplate } from "../../template";
 getTemplate(import.meta.url, "load-animation-template.html").then((templateDocument)=>{
 	PageLoadAnimation.template = templateDocument.getElementById("page-load-animation");
-	customElements.define("page-load-animation", PageLoadAnimation);
+	window.constructor_withTemplate.push(PageLoadAnimation);
 });
 
 export default function PageLoadAnimation() {

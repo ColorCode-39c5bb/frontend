@@ -1,18 +1,13 @@
 import {getTemplate} from "../../../template.js";
-getTemplate(import.meta.url, "blog.html").then((templateDocument)=>{	
+getTemplate(import.meta.url, "blog.html").then((templateDocument)=>{
 	BlogNavigation.template = templateDocument.getElementById("blog-navigation");
-	customElements.define(BlogNavigation.template.id, BlogNavigation);
+	window.constructor_withTemplate.push(BlogNavigation);
 });
 export default function BlogNavigation(){
 	const _this = Reflect.construct(HTMLElement, [], BlogNavigation);
 	_this.attachShadow({mode: "open"});
-	_this.data_default = {
-		nick: "[昵称]",
-		signatures: ["[签名1]", "[签名2]"],
-		profile: ""
-	}
 	_this.initShadowRoot();
-	_this.followup={
+	_this.els_tooperate={
 		profile: _this.shadowRoot.getElementById("profile"),
 		nick: _this.shadowRoot.getElementById("nick"),
 		signature: _this.shadowRoot.getElementById("signature"),
@@ -33,9 +28,9 @@ BlogNavigation.prototype.disconnectedCallback = function(){
 BlogNavigation.prototype.adoptedCallback = function(){
 	
 }
-BlogNavigation.prototype.reactiverender = HTMLElement.render_isConnected(function(rd){
-	const {profile, nick, signature} = this.followup;
+BlogNavigation.prototype.reactiverender = function(rd){
+	const {profile, nick, signature} = this.els_tooperate;
 	profile.innerText = rd.profile;
 	nick.innerText = rd.nick;
 	signature.reactiverender(rd.signatures);
-})
+}

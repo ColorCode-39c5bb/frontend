@@ -1,8 +1,13 @@
 import Router from "./Router.js";
 import config_route from "./config/config_route.js";
-import {templatePromise, requestCache} from "./template.js";
+import {requestCache} from "./template.js";
 
-
+import PageHome from "../myelement/page/PageHome.js";
+import PageAbout from "../myelement/page/PageAbout.js";
+import PageBlog from "../myelement/page/PageBlog.js";
+import BlogAbout from "../myelement/page/blog/BlogAbout.js";
+import BlogHome from "../myelement/page/blog/BlogHome.js";
+import PageArticle from "../myelement/page/PageArticle.js"
 import NotSlotted from "./myelement/NotSlotted.js";
 import BackgroundImage from "./myelement/BackgroundImage.js";
 import ImageLoadAnimation from "./myelement/loadanimation/ImageLoadAnimation.js";
@@ -13,34 +18,56 @@ import BlogNavigation from "./myelement/page/blog/BlogNavigation.js";
 import TextTyping from "./myelement/TextTyping.js";
 import AboutCard from "./myelement/AboutCard.js";
 import DefaultPagination from "./myelement/pagination/DefaultPagination.js";
-import BlogAbout from "./myelement/page/blog/BlogAbout.js";
-import BlogHome from "./myelement/page/blog/BlogHome.js";
 import AppMain from "./myelement/AppMain.js";
 
+HTMLElement._render = function(render){
+	return function(rd, render_acquired){
+		this.rd_torender ??= [];
+		this.rd_torender.push(rd);
+		if(this.__proto__.constructor == HTMLElement) return;
+		if(!this.isConnected) return;
+
+		rd = this.reactivemerge();
+		this.rd_torender = undefined;
+		if(rd == undefined) return;
+		render.call(this, rd, render_acquired);
+	};
+};
+
+HTMLElement._connectedcallback = function(connectedcallback){
+	return function(){
+		if(this.rd_torender) this.reactiverender();
+		return connectedcallback.call(this);
+	}
+};
+
 const defaultStyleSheet = new CSSStyleSheet();
-for(let i = 1; i < document.styleSheets[0].cssRules.length; i++) 
-	defaultStyleSheet.insertRule(document.styleSheets[0].cssRules[i].cssText);
+for(let i = 1; i < document.styleSheets[0].cssRules.length; i++) defaultStyleSheet.insertRule(document.styleSheets[0].cssRules[i].cssText);
 HTMLElement.prototype.initShadowRoot = function(){
 	if(this.shadowRoot == null) return;
 	this.shadowRoot.adoptedStyleSheets.push(defaultStyleSheet);
 	this.shadowRoot.appendChild(customElements.get(this.tagName.toLowerCase()).template.content.cloneNode(true));
-	customElements.upgrade(this.shadowRoot);
-	this.reactivedata = structuredClone(this.data_default);
-	this.is_first_connected = true;
+	//customElements.upgrade(this); customElements.upgrade(this.shadowRoot);
 }
-HTMLElement.prototype.first_connected = function(){
-	console.log("first_connected", this);
-}
-HTMLElement.prototype.reactiverender = HTMLElement.render_isConnected(function(rd){
-	console.log("default_reactiverender", this);
-})
-HTMLElement.prototype.reactiverefresh = function(rd){
+
+HTMLElement.prototype.reactivemerge = function(){
+	const rd = this.rd_torender.reduce(function(prev, cur){
+		if(!prev) return cur;
+		return Object.assign(prev, cur);
+	});
 	this.reactivedata ??= {};
 	Object.assign(this.reactivedata, rd);
+	return rd;
 }
+
+HTMLElement.prototype.reactiverender = HTMLElement._render(function(rd, render){
+	if(typeof(render)!="function") return;
+	render.call(this, rd);
+});
+
 HTMLElement.prototype.reactiverender_for = function(rdarray, render){
-	if(rdarray===undefined) return;
-	if(rdarray===null) rdarray = [];
+	//if(!rdarray) throw new Error("rdarray必须是数组, 否则此方法不应该有机会调用");
+	if(rdarray == undefined) return;
 	if(!this.Ns_active) this.Ns_active = [this];
 	if(!this.Ns_inactive) this.Ns_inactive = [];
 	if(!this.container) this.container = this.parentElement;
@@ -52,25 +79,32 @@ HTMLElement.prototype.reactiverender_for = function(rdarray, render){
 			this.container.appendChild(next);
 			this.Ns_active.push(next);
 		}
-		render.call(next, rdarray[i]);
+		next.reactiverender(rdarray[i], render);
 	}
 	for(let j=this.Ns_active.length-rdarray.length; j>0; j--){
 		const item = this.Ns_active.pop();
 		item.remove();
 		this.Ns_inactive.push(item);
 	}
-}
+};
+
+
+
+
+
+
+
+window.constructor_withTemplate = [];
 window.router = new Router(config_route);
-const appmain = document.getElementById("app-main");
-appmain.remove();
-Promise.all([templatePromise, ...requestCache.values()]).then(()=>{
-	//第一次connected的元素在connectedCallback时内部使用的自定义元素可能还没有升级，
-	//connectedCallback里如果调用这些没有升级的元素的render就会调到默认的HTMLElement.prototype.render，
-	//所以必须确保任意元素connectedCallback时，所有元素都已经升级能够调用到自定义的render方法
-	window.router.Ns_link_target.values().forEach(target=>{
-		customElements.upgrade(target);
+window.router.push("/blog");
+Promise.all(requestCache.values()).then(()=>{
+	const appmain = document.getElementById("appmain");
+	appmain.remove();
+	constructor_withTemplate.forEach((C)=>{
+		C.prototype.reactiverender = HTMLElement._render(C.prototype.reactiverender);
+		C.prototype.connectedCallback = HTMLElement._connectedcallback(C.prototype.connectedCallback);
+		customElements.define(C.template.id, C);
 	});
+	//window.router.Ns_link_target.forEach((target)=>customElements.upgrade(target));
 	document.body.appendChild(appmain);
-	window.router.replace("/");
-	//window.router.push("/blog/home");
 });

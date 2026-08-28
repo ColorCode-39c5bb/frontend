@@ -5,7 +5,7 @@ const templatePromise = fetch("./myelement/template.html")
 })
 .then(text => new DOMParser().parseFromString(text, "text/html"));
 
-const requestCache = new Map();
+const requestCache = new Map([["templatePromise", templatePromise]]);
 
 function getTemplate(moduleImportMetaUrl, templateRelativePath){
 	const templateURL = new URL(templateRelativePath, moduleImportMetaUrl).href;

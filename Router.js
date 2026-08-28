@@ -15,10 +15,10 @@ export default function Router(config_route) {
 			this.push(a.getAttribute("href"));
 		}, false);
 	});
-	document.querySelectorAll("[route]:not(a)").forEach((page)=>{
-		page.target_container = page.parentElement;
-		this.Ns_link_target.set(page.getAttribute("route"), page);
-		page.remove();
+	document.querySelectorAll("[route]:not(a)").forEach((target)=>{
+		target.target_container = target.parentElement;
+		this.Ns_link_target.set(target.getAttribute("route"), target);
+		target.remove();
 	});
 
 	window.addEventListener("popstate", this.render.bind(this), false);

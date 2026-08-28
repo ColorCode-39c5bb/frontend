@@ -1,7 +1,7 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
 	BackgroundImage.template = templateDocument.getElementById("background-image");
-	customElements.define("background-image", BackgroundImage);
+	window.constructor_withTemplate.push(BackgroundImage);
 });
 
 export default function BackgroundImage(){
@@ -65,4 +65,7 @@ BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, ne
 			this.loadAnimation.style.display = "";
 			break;
 	}
+}
+
+BackgroundImage.prototype.connectedCallback = function(){
 }
