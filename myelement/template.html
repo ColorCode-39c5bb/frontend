@@ -17,28 +17,33 @@
 
 
 <template id="navigation-bar">
-<a href="#" style="text-align: left;">
+<a href="#">
 	<slot name="logo"><not-slotted>未插入LOGO</not-slotted></slot>
 </a>
-<span id="current-page-bar" style="text-align: center;">Home</span>
-<button id="page-button" style="text-align: right;">OO</button>
+<span id="current-page-bar">Home</span>
+<button id="page-button" style="align-self: stretch; background-color: transparent; box-shadow: none;">
+	<img class="icon" src="../resource/icon/bars-solid-full.svg">
+</button>
 <slot name="navigation-page"></slot>
 <style>
 	:host{
+		height: 44px;
+		padding: 0 20px !important;
 		width: 100%;
 		display: flex;
 		align-items: center;
-		background: transparent;
 		box-shadow: var(--box-shadow-middle);
 		position: fixed;
 		top: -66px;
 		left: 0px;
 		transition: top 0.3s ease-out;
 		z-index: 1;
+		justify-content: space-between;
 	}
 	:host > *{
-		flex-basis: 0;
-		flex-grow: 1;
+		flex-basis: 44px;
+		/*flex-grow: 1;*/
+		text-align: center;
 	}
 	::slotted(navigation-page:not(:popover-open)) {
 		display: none;

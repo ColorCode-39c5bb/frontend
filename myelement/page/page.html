@@ -1,16 +1,16 @@
 <template id="page-article">
-<h1 id="title" style="text-align: center; margin-bottom: 20px;"></h1>
+<h1 id="title" style="text-align: center;"></h1>
 <div id="article-info">
     <span>发布 <span id="create-date"></span></span>
     <span>更新 <span id="update-date"></span></span>
     <span><i class="fas fa-eye"></i> <span id="read"></span></span>
 </div>
 <!-- 封面图 -->
-<img id="cover" style="width: 100%; border-radius: 8px; margin: 30px 0;" :src="server +'/'+ article.cover" alt="文章封面">
+<img id="cover" style="width: 100%; border-radius: 8px;" alt="文章封面">
 <!-- 文章内容 -->
-<div id="content" v-html="article.content"></div>
+<div id="content"></div>
 <!-- 文章标签 -->
-<div id="tags" style="margin: 30px 0;">
+<div id="tags">
     <div class="tag"></div>
 </div>
 <!-- 操作按钮 -->
@@ -30,6 +30,10 @@
 	display: block;
 	padding: 20px !important;
 }
+:host > *{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 #article-info {
     display: block;
 	padding-bottom: 10px;
@@ -40,6 +44,10 @@
 #article-info > *{
 	display: inline-block;
 	width: 33%;
+}
+#article-info ~ *{
+	margin-left: 10%;
+	margin-right: 10%;
 }
 
 .tag {
@@ -92,6 +100,15 @@
 
 <template id="page-about">
 	<slot name="item"></slot>
+<style>
+	:host{
+		display: block;
+		padding: 20px 40px !important;
+	}
+	::slotted([slot="item"]){
+		margin-bottom: 20px !important;
+	}
+</style>
 </template>
 
 
@@ -119,13 +136,17 @@
 		justify-content: center;
 	}
 	[name="keyword"]{
+		height: 40px;
 		flex-basis: 70%;
 		box-shadow: var(--box-shadow-small);
+		background-color: rgba(255, 255, 255, 0.75);
+		resize: none;
+		border-radius: 20px;;
 	}
 	#tags{
 		flex-basis: 50%;
 		text-align: center;
-		margin-top: 10px;
+		margin-top: 30px;
 	}
 	.tag {
 		display: inline-block;

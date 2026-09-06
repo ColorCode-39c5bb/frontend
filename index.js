@@ -88,12 +88,6 @@ HTMLElement.prototype.reactiverender_for = function(rdarray, render){
 	}
 };
 
-
-
-
-
-
-
 window.constructor_withTemplate = [];
 window.router = new Router(config_route);
 window.router.push("/blog");

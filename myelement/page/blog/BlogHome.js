@@ -60,10 +60,10 @@ BlogHome.prototype.reactivemerge = function(){
 	if(!rd) return rd;
 	this.reactivedata ??= { requestbody: {} };
 	Object.assign(this.reactivedata.requestbody, rd.requestbody);
-	const requestbody = rd.requestbody;
+	const requestbody_temp = rd.requestbody;
 	delete rd.requestbody;
 	Object.assign(this.reactivedata, rd);
-	rd.requestbody = requestbody;
+	rd.requestbody = requestbody_temp;
 	return rd;
 }
 BlogHome.prototype.reactiverender = function(rd){

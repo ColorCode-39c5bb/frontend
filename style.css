@@ -1,0 +1,6 @@
+blog-navigation a{
+	text-align: center;
+}
+blog-navigation a .icon{
+	vertical-align: sub;
+}
