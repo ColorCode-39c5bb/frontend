@@ -1,7 +1,7 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	BackgroundImage.template = templateDocument.getElementById("background-image");
-	window.constructor_withTemplate.push(BackgroundImage);
+	BackgroundImage.prototype.template = templateDocument.getElementById("background-image");
+	window.constructor_customelement.push(BackgroundImage);
 });
 
 export default function BackgroundImage(){

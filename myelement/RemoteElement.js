@@ -34,14 +34,14 @@ RemoteElement.prototype.connectedCallback = function(){
 			element => { range.selectNode(this);
 				// RemoteElement.requestCache.push(remote.tagname+"");
 				console.log(element);
-				const template = range.createContextualFragment(element.text).firstElementChild;
+				const.prototype.template = range.createContextualFragment(element.text).firstElementChild;
 				if(!element.scripturl) {
 					this.appendChild(template.content.cloneNode(true));
 					return;
 				}
 				import(element.scripturl).then(module => {
 					if(module.default) {
-						module.default.template = template;
+						module.default.prototype.template = template;
 						customElements.define(element.tagname, module.default);
 					}
 					else {

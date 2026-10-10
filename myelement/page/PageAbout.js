@@ -1,13 +1,13 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageAbout.template = templateDocument.getElementById("page-about");
-	window.constructor_withTemplate.push(PageAbout);
+	PageAbout.prototype.template = templateDocument.getElementById("page-about");
+	window.constructor_customelement.push(PageAbout);
 });
 export default function PageAbout(){
 	const _this = Reflect.construct(HTMLElement, [], PageAbout);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
-	_this.els_tooperate = {
+	_this.elements_todo = {
 		item: _this.querySelector("[slot='item']"),
 	}
 	_this.reactiverender([
@@ -128,5 +128,5 @@ PageAbout.prototype.adoptedCallback = function(){
 	
 }
 PageAbout.prototype.reactiverender = function(rd){
-	this.els_tooperate.item.reactiverender_for(rd);
+	this.elements_todo.item.reactiverender_for(rd);
 }

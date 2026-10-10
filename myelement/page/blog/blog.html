@@ -12,7 +12,7 @@
 </template>
 
 <template id="blog-navigation">
-<div id="profile"></div>
+<div id="avatar"></div>
 <div id="nick"></div>
 <text-typing id="signature" typeinterval="200"></text-typing>
 <nav>
@@ -32,7 +32,7 @@
 :host > *{
 	margin: 10px 0 !important;
 }
-#profile{
+#avatar{
 	display: inline-block;
 	width: 45%;
 	aspect-ratio: 1 / 1; /* 高度等于宽度 */
@@ -41,7 +41,7 @@
 	transition: all 0.2s ease-in-out;
 
 }
-#profile:hover{
+#avatar:hover{
 	width: 49%;
 }
 ::slotted(a){

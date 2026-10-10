@@ -1,7 +1,7 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	NavigationBar.template = templateDocument.getElementById("navigation-bar");
-	window.constructor_withTemplate.push(NavigationBar);
+	NavigationBar.prototype.template = templateDocument.getElementById("navigation-bar");
+	window.constructor_customelement.push(NavigationBar);
 });
 
 export default class NavigationBar extends HTMLElement {

@@ -1,7 +1,7 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	TextTyping.template = templateDocument.getElementById("text-typing");
-	window.constructor_withTemplate.push(TextTyping);
+	TextTyping.prototype.template = templateDocument.getElementById("text-typing");
+	window.constructor_customelement.push(TextTyping);
 });
 export default function TextTyping(){
 	const _this = Reflect.construct(HTMLElement, [], TextTyping);
@@ -9,7 +9,7 @@ export default function TextTyping(){
 	_this.initShadowRoot();
 	
 	_this.input_interval = null, _this.cursor_interval = null;
-	_this.els_tooperate = {
+	_this.elements_todo = {
 		input: _this.shadowRoot.getElementById("input"),
 		cursor: _this.shadowRoot.getElementById("cursor"),
 	};
@@ -31,7 +31,7 @@ TextTyping.prototype.adoptedCallback = function(){
 }
 
 TextTyping.prototype.reactiverender = function(rd){
-	const {input, cursor} = this.els_tooperate;
+	const {input, cursor} = this.elements_todo;
 	clearInterval(this.input_interval);
 	clearInterval(this.cursor_interval);
 

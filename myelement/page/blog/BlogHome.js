@@ -1,15 +1,15 @@
 import config_site from "../../../config/config_site.js";
 import {getTemplate} from "../../../template.js";
 getTemplate(import.meta.url, "blog.html").then((templateDocument)=>{
-	BlogHome.template = templateDocument.getElementById("blog-home");
-	window.constructor_withTemplate.push(BlogHome);
+	BlogHome.prototype.template = templateDocument.getElementById("blog-home");
+	window.constructor_customelement.push(BlogHome);
 });
 export default function BlogHome(){
 	const _this = Reflect.construct(HTMLElement, [], BlogHome);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
 
-	_this.els_tooperate={
+	_this.elements_todo={
 		item: _this.querySelector("[slot='item']"),
 		pagination: _this.querySelector("[slot='pagination']"),
 		page_article: window.router.Ns_link_target.get("/article"),
@@ -18,20 +18,14 @@ export default function BlogHome(){
 		if(e.target == _this || e.target.tagName != "ARTICLE-CARD") return;
 		console.log(e.target.reactivedata);
 		window.router.push("/article");
-		_this.els_tooperate.page_article.reactiverender(e.target.reactivedata);
+		_this.elements_todo.page_article.reactiverender(e.target.reactivedata);
 	});
-	_this.els_tooperate.pagination.addEventListener("pagechange", function(e){
-		_this.reactiverender({
-			requestbody: {
-				page: e.detail.page,
-			}
-		});
+	_this.elements_todo.pagination.addEventListener("pagechange", function(e){
+		setTimeout(()=>_this.reactiverender({fetch: {page: e.detail.page,}}));
 	});
 	_this.reactiverender({
-		pagination: {
-			page: 1,
-			pagercount: 7,
-		}
+		pagination: {pagercount: 7}, 
+		requestbody: {page: 1},
 	});
 	return _this;
 }
@@ -49,44 +43,35 @@ BlogHome.prototype.disconnectedCallback = function(){
 BlogHome.prototype.adoptedCallback = function(){
 	
 }
-BlogHome.prototype.reactivemerge = function(){
-	const rd = this.rd_torender.reduce(function(pre, cur){
-		if(!pre) return cur;
-		if(!pre.requestbody) pre.requestbody = cur?.requestbody;
-		else Object.assign(pre.requestbody, cur?.requestbody);
-		delete cur?.requestbody;
-		return Object.assign(pre, cur);
-	});
-	if(!rd) return rd;
-	this.reactivedata ??= { requestbody: {} };
-	Object.assign(this.reactivedata.requestbody, rd.requestbody);
-	const requestbody_temp = rd.requestbody;
-	delete rd.requestbody;
-	Object.assign(this.reactivedata, rd);
-	rd.requestbody = requestbody_temp;
-	return rd;
-}
 BlogHome.prototype.reactiverender = function(rd){
-	const {				item: el_item, pagination: el_pagination} = this.els_tooperate;
-	const {requestbody: rd_requestbody,	articles: rd_articles, pagination: rd_pagination} = rd;
-	el_pagination.reactiverender(rd_pagination);
-	if(rd_requestbody && Object.keys(this.reactivedata.requestbody).length==4){
-		fetch(`${config_site.server}/blog/articles`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(Object.assign(this.reactivedata.requestbody, rd_requestbody))
-		}).then((response)=>response.json())
-		.then((body)=>{
-			this.reactiverender({
-				articles: body.data,
-				pagination: {
-					totalpage: Math.ceil(body.dataExtra/this.reactivedata.requestbody.pagesize),
-				},
+	const {item: el_item, pagination: el_pagination} = this.elements_todo;
+	el_pagination.reactiverender();
+	if(rd.fetch){
+		Object.assign(rd.requestbody, rd.fetch);
+		if(Object.keys(rd.requestbody).length==4)
+			return fetch(`${config_site.server}/blog/articles`, {
+				method: "PUT", headers: {"Content-Type": "application/json",},
+				body: JSON.stringify(rd.requestbody)
+			}).then((response)=>response.json())
+			.then((body)=>{
+				this.reactiverender({
+					fetch: undefined, articles: body,
+					pagination: {
+						page: 1,
+						totalpage: Math.ceil(body.dataExtra/rd.requestbody.pagesize),
+					},
+				});
 			});
-		});
-		return;
 	}
-	el_item.reactiverender_for(rd_articles);
+	el_item.reactiverender_for(rd.articles);
+};
+
+BlogHome.prototype.RDCLASS = function(){
+	this.construction = {
+		fetch: {mergemode: false, isprimary: true},
+		requestbody: {mergemode: true},
+		articles: {mergemode: false},
+		pagination: {mergemode: "transitive"},
+	}
+	return this;
 };

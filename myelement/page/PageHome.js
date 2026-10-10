@@ -1,14 +1,14 @@
 import {getTemplate} from "../../template.js";	
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageHome.template = templateDocument.getElementById("page-home");
-	window.constructor_withTemplate.push(PageHome);
+	PageHome.prototype.template = templateDocument.getElementById("page-home");
+	window.constructor_customelement.push(PageHome);
 });
 export default function PageHome(){
 	const _this = Reflect.construct(HTMLElement, [], PageHome);
 	_this.attachShadow({mode: "open"});
 	_this.initShadowRoot();
 
-	_this.els_tooperate = {
+	_this.elements_todo = {
 		greeting: _this.shadowRoot.getElementById("greeting"),
 	};
 
@@ -35,6 +35,6 @@ PageHome.prototype.adoptedCallback = function(){
 	
 }
 PageHome.prototype.reactiverender = function(rd){
-	const {greeting} = this.els_tooperate;
+	const {greeting} = this.elements_todo;
 	greeting.reactiverender(rd.greeting);
 }

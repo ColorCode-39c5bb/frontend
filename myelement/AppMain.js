@@ -1,7 +1,7 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	AppMain.template = templateDocument.getElementById("app-main");
-	window.constructor_withTemplate.push(AppMain);
+	AppMain.prototype.template = templateDocument.getElementById("app-main");
+	window.constructor_customelement.push(AppMain);
 });
 export default function AppMain(){
 	const _this = Reflect.construct(HTMLElement, [], AppMain);

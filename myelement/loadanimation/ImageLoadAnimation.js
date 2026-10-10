@@ -1,7 +1,7 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "load-animation-template.html").then((templateDocument)=>{
-	ImageLoadAnimation.template = templateDocument.getElementById("image-load-animation");
-	window.constructor_withTemplate.push(ImageLoadAnimation);
+	ImageLoadAnimation.prototype.template = templateDocument.getElementById("image-load-animation");
+	window.constructor_customelement.push(ImageLoadAnimation);
 });
 
 export default class ImageLoadAnimation extends HTMLElement {
@@ -14,7 +14,7 @@ constructor() { super();
 	this.loaderContainer = null;
 
 	this.setAttribute('type', "spinner");
-	this.appendChild(ImageLoadAnimation.template.content.cloneNode(true));
+	this.appendChild(this.template.content.cloneNode(true));
 	this.loaderContainer = this.querySelector('.image-loader');
 	this.loaders = {
 		spinner: this.querySelector('.loader-spinner'),
