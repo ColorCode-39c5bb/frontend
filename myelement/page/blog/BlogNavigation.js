@@ -1,12 +1,11 @@
 import {getTemplate} from "../../../template.js";
 getTemplate(import.meta.url, "blog.html").then((templateDocument)=>{
-	BlogNavigation.prototype.template = templateDocument.getElementById("blog-navigation");
+	BlogNavigation.template = templateDocument.getElementById("blog-navigation");
 	window.constructor_customelement.push(BlogNavigation);
 });
 export default function BlogNavigation(){
 	const _this = Reflect.construct(HTMLElement, [], BlogNavigation);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
+	_this.initShadowRoot(BlogNavigation);
 	_this.elements_todo={
 		avatar: _this.shadowRoot.getElementById("avatar"),
 		nick: _this.shadowRoot.getElementById("nick"),
@@ -28,8 +27,8 @@ BlogNavigation.prototype.disconnectedCallback = function(){
 BlogNavigation.prototype.adoptedCallback = function(){
 	
 }
-BlogNavigation.prototype.reactiverender = function(rd){
-	const {avatar: el_avatar, nick: el_nick, signature: el_signature} = this.elements_todo;
+BlogNavigation.prototype.reactiverender = function(delta){
+	const {avatar: el_avatar, nick: el_nick, signature: el_signature} = this.elements_todo; const rd = this.reactivedata.datavalue;
 	el_avatar.innerText = rd.profile.avatar;
 	el_nick.innerText = rd.nick;
 	el_signature.reactiverender(rd.profile.signatures || []);

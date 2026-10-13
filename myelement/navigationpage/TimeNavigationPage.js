@@ -1,6 +1,6 @@
 import { getTemplate } from "../../template.js";
 getTemplate(import.meta.url, "navigation-page-template.html").then((templateDocument)=>{
-	TimeNavigationPage.prototype.template = templateDocument.getElementById("time-navigation-page");
+	TimeNavigationPage.template = templateDocument.getElementById("time-navigation-page");
 	window.constructor_customelement.push(TimeNavigationPage);
 });
 

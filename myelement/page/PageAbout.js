@@ -1,12 +1,11 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageAbout.prototype.template = templateDocument.getElementById("page-about");
+	PageAbout.template = templateDocument.getElementById("page-about");
 	window.constructor_customelement.push(PageAbout);
 });
 export default function PageAbout(){
 	const _this = Reflect.construct(HTMLElement, [], PageAbout);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
+	_this.initShadowRoot(PageAbout);
 	_this.elements_todo = {
 		item: _this.querySelector("[slot='item']"),
 	}
@@ -112,7 +111,6 @@ export default function PageAbout(){
 	]);
 	return _this;
 }
-PageAbout.tagname = "page-about";
 Object.setPrototypeOf(PageAbout.prototype, HTMLElement.prototype);
 Object.setPrototypeOf(PageAbout, HTMLElement);
 Object.defineProperty(PageAbout.prototype, "observedAttributes", {get: function() {return ["value"]}});
@@ -127,6 +125,6 @@ PageAbout.prototype.disconnectedCallback = function(){
 PageAbout.prototype.adoptedCallback = function(){
 	
 }
-PageAbout.prototype.reactiverender = function(rd){
-	this.elements_todo.item.reactiverender_for(rd);
+PageAbout.prototype.reactiverender = function(delta){
+	this.elements_todo.item.reactiverender_for(delta);
 }

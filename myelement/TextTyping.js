@@ -1,12 +1,11 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	TextTyping.prototype.template = templateDocument.getElementById("text-typing");
+	TextTyping.template = templateDocument.getElementById("text-typing");
 	window.constructor_customelement.push(TextTyping);
 });
 export default function TextTyping(){
 	const _this = Reflect.construct(HTMLElement, [], TextTyping);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
+	_this.initShadowRoot(TextTyping);
 	
 	_this.input_interval = null, _this.cursor_interval = null;
 	_this.elements_todo = {
@@ -30,8 +29,8 @@ TextTyping.prototype.adoptedCallback = function(){
 	
 }
 
-TextTyping.prototype.reactiverender = function(rd){
-	const {input, cursor} = this.elements_todo;
+TextTyping.prototype.reactiverender = function(delta){
+	const {input, cursor} = this.elements_todo; const rd = this.reactivedata.datavalue;
 	clearInterval(this.input_interval);
 	clearInterval(this.cursor_interval);
 

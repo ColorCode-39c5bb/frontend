@@ -1,12 +1,11 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageArticle.prototype.template = templateDocument.getElementById("page-article");
+	PageArticle.template = templateDocument.getElementById("page-article");
 	window.constructor_customelement.push(PageArticle);
 });
 export default function PageArticle(){
 	const _this = Reflect.construct(HTMLElement, [], PageArticle);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
+	_this.initShadowRoot(PageArticle);
 	_this.elements_todo = {
 		title: _this.shadowRoot.getElementById("title"),
 		create_date: _this.shadowRoot.getElementById("create-date"),
@@ -33,8 +32,8 @@ PageArticle.prototype.disconnectedCallback = function(){
 PageArticle.prototype.adoptedCallback = function(){
 	
 }
-PageArticle.prototype.reactiverender = function(rd){
-	const {title, create_date, update_date, read, cover, content, tag} = this.elements_todo;
+PageArticle.prototype.reactiverender = function(delta){
+	const {title, create_date, update_date, read, cover, content, tag} = this.elements_todo; const rd = this.reactivedata.datavalue;
 	title.textContent = rd.title;
 	create_date.textContent = rd.create_date;
 	update_date.textContent = rd.update_date;

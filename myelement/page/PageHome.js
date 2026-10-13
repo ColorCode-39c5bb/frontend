@@ -1,13 +1,11 @@
 import {getTemplate} from "../../template.js";	
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageHome.prototype.template = templateDocument.getElementById("page-home");
+	PageHome.template = templateDocument.getElementById("page-home");
 	window.constructor_customelement.push(PageHome);
 });
 export default function PageHome(){
 	const _this = Reflect.construct(HTMLElement, [], PageHome);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
-
+	_this.initShadowRoot(PageHome);
 	_this.elements_todo = {
 		greeting: _this.shadowRoot.getElementById("greeting"),
 	};
@@ -34,7 +32,7 @@ PageHome.prototype.disconnectedCallback = function(){
 PageHome.prototype.adoptedCallback = function(){
 	
 }
-PageHome.prototype.reactiverender = function(rd){
-	const {greeting} = this.elements_todo;
+PageHome.prototype.reactiverender = function(delta){
+	const {greeting} = this.elements_todo; const rd = this.reactivedata.datavalue;
 	greeting.reactiverender(rd.greeting);
 }

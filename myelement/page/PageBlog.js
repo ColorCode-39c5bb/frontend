@@ -1,14 +1,12 @@
 import {getTemplate} from "../../template.js";
 import config_site from "../../config/config_site.js";
 getTemplate(import.meta.url, "page.html").then((templateDocument)=>{
-	PageBlog.prototype.template = templateDocument.getElementById("page-blog");
+	PageBlog.template = templateDocument.getElementById("page-blog");
 	window.constructor_customelement.push(PageBlog);
 });
 export default function PageBlog(){
 	const _this = Reflect.construct(HTMLElement, [], PageBlog);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
-
+	_this.initShadowRoot(PageBlog);
 	_this.elements_todo = {
 		tagcontainer: _this.shadowRoot.querySelector("#tags"),
 		keyword: _this.shadowRoot.querySelector("[name='keyword']"),
@@ -22,11 +20,11 @@ export default function PageBlog(){
 		if(e.target == this) return;
 		e.target.classList.toggle("selected");
 		_this.reactiverender(
-			{bloghome: {fetch: {tags: Array.from(this.querySelectorAll(".tag.selected")).map(tag=>tag.reactivedata.datavalue.name)}},
+			{bloghome: {requestbody: {tags: Array.from(this.querySelectorAll(".tag.selected")).map(tag=>tag.reactivedata.datavalue.name)}},
 		});
 	});
 	_this.elements_todo.keyword.addEventListener("change", function(e){
-		_this.reactiverender({bloghome: {fetch: {keyword: this.value,}}});
+		_this.reactiverender({bloghome: {requestbody: {keyword: this.value,}}});
 	});
 	window.router.push("/blog/home");
 	_this.reactiverender({bloghome: {requestbody: {keyword: "", tags: [], pagesize: 3}}});
@@ -54,25 +52,33 @@ PageBlog.prototype.disconnectedCallback = function(){
 }
 PageBlog.prototype.adoptedCallback = function(){
 }
-PageBlog.prototype.reactiverender = function(rd){
-	const {tag:el_tag, bloghome:el_bloghome, blogabout:el_blogabout, navigation:el_navigation,} = this.elements_todo;
-	el_tag.reactiverender_for(rd.tags, function(tag){
-		this.firstElementChild.innerText = tag.name;
-		this.lastElementChild.innerText = tag.article_count;
-	});
-	if(rd.account){
-		el_bloghome.reactiverender({fetch: {page: 1}});
+PageBlog.prototype.reactiverender = function(delta){
+	const {tag:el_tag, bloghome:el_bloghome, blogabout:el_blogabout, navigation:el_navigation,} = this.elements_todo; const rd = this.reactivedata.datavalue;
+	if(delta.bloghome)
+		el_bloghome.reactiverender(rd.bloghome);
+	if(delta.tags)
+		el_tag.reactiverender_for(rd.tags, function(tag){
+			this.firstElementChild.innerText = tag.name;
+			this.lastElementChild.innerText = tag.article_count;
+		});
+	if(delta.account){
+		el_bloghome.reactiverender({pagination: {page: 1}});
 		el_navigation.reactiverender(rd.account);
 		el_blogabout.reactiverender(rd.account.profile.about);
 	}
 }
 
-PageBlog.prototype.RDCLASS = function(){
+PageBlog.RDCLASS = function(){
 	this.construction = {
-		mergemode: true,
-		bloghome: {mergemode: "transitive"},
-		account: {mergemode: false, isprimary: true},
-		tags: {mergemode: false},
+		mergemode: "mode_incremental", isprimary: false,
+		data_default: {
+			bloghome: null,
+			account: undefined,
+			tags: ["No Tag"],
+		},
+		bloghome: {mergemode: "mode_transitive", data_default: null},
+		account: {mergemode: "mode_full"},
+		tags: {mergemode: "mode_full"},
 	}
 	return this;
 }

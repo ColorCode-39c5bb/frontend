@@ -1,42 +1,42 @@
 import {getTemplate} from "../../template.js";
 getTemplate(import.meta.url, "load-animation-template.html").then((templateDocument)=>{
-	ImageLoadAnimation.prototype.template = templateDocument.getElementById("image-load-animation");
+	ImageLoadAnimation.template = templateDocument.getElementById("image-load-animation");
 	window.constructor_customelement.push(ImageLoadAnimation);
 });
+export default function ImageLoadAnimation(){
+	const _this = Reflect.construct(HTMLElement, [], ImageLoadAnimation);
+	_this.initShadowRoot(ImageLoadAnimation);
+	_this.elements_todo={};
+	_this.loaders = {};
+	_this.loaderContainer = null;
 
-export default class ImageLoadAnimation extends HTMLElement {
-static get observedAttributes() {
-	return ['type', 'size', 'color', 'radius'];
-}
-
-constructor() { super();
-	this.loaders = {};
-	this.loaderContainer = null;
-
-	this.setAttribute('type', "spinner");
-	this.appendChild(this.template.content.cloneNode(true));
-	this.loaderContainer = this.querySelector('.image-loader');
-	this.loaders = {
-		spinner: this.querySelector('.loader-spinner'),
-		skeleton: this.querySelector('.loader-skeleton'),
-		pulse: this.querySelector('.loader-pulse'),
-		grid: this.querySelector('.loader-grid'),
-		progress: this.querySelector('.loader-progress'),
-		'image-shape': this.querySelector('.loader-image-shape'),
-		custom: this.querySelector('.loader-custom')
+	_this.setAttribute('type', "spinner");
+	_this.loaderContainer = _this.shadowRoot.querySelector('.image-loader');
+	_this.loaders = {
+		spinner: _this.shadowRoot.querySelector('.loader-spinner'),
+		skeleton: _this.shadowRoot.querySelector('.loader-skeleton'),
+		pulse: _this.shadowRoot.querySelector('.loader-pulse'),
+		grid: _this.shadowRoot.querySelector('.loader-grid'),
+		progress: _this.shadowRoot.querySelector('.loader-progress'),
+		'image-shape': _this.shadowRoot.querySelector('.loader-image-shape'),
+		custom: _this.shadowRoot.querySelector('.loader-custom')
 	};
+	return _this;
 }
-
-attributeChangedCallback(name, oldValue, newValue) {
+Object.setPrototypeOf(ImageLoadAnimation.prototype, HTMLElement.prototype); Object.setPrototypeOf(ImageLoadAnimation, HTMLElement);
+Object.defineProperty(ImageLoadAnimation, "observedAttributes", {get: function() {return ['type', 'size', 'color', 'radius']}});
+ImageLoadAnimation.prototype.connectedCallback = function(){
+	this.render();
+}
+ImageLoadAnimation.prototype.attributeChangedCallback = function(name, oldValue, newValue){
 	if (oldValue == newValue || !newValue) return;
 	this.render();
 }
-
-connectedCallback() {
-	this.render();
+ImageLoadAnimation.prototype.disconnectedCallback = function(){
 }
-
-render() {
+ImageLoadAnimation.prototype.adoptedCallback = function(){
+}
+ImageLoadAnimation.prototype.render = function(){
 	// 隐藏所有加载器
 	Object.values(this.loaders).forEach(loader => loader.style.display = 'none');
 	// 显示当前类型的加载器
@@ -49,5 +49,4 @@ render() {
 	this.loaderContainer.style.setProperty('--spinner-color', this.getAttribute('color'));
 	this.loaderContainer.style.setProperty('--grid-color', this.getAttribute('color'));
 	this.loaderContainer.style.setProperty('--progress-color', this.getAttribute('color'));
-}
 }

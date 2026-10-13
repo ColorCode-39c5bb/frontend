@@ -1,13 +1,12 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	BackgroundImage.prototype.template = templateDocument.getElementById("background-image");
+	BackgroundImage.template = templateDocument.getElementById("background-image");
 	window.constructor_customelement.push(BackgroundImage);
 });
 
 export default function BackgroundImage(){
 	const _this = Reflect.construct(HTMLElement, [], BackgroundImage);
-	_this.attachShadow({mode: "open"});
-	_this.initShadowRoot();
+	_this.initShadowRoot(BackgroundImage);
 	_this.image = null;
 	_this.loadAnimation = null;
 	_this.imageNaturalRadio = 1;
@@ -51,7 +50,8 @@ export default function BackgroundImage(){
 Object.setPrototypeOf(BackgroundImage.prototype, HTMLElement.prototype);
 Object.setPrototypeOf(BackgroundImage, HTMLElement);
 Object.defineProperty(BackgroundImage, "observedAttributes", {get: function() {return ["src"];}});
-
+BackgroundImage.prototype.connectedCallback = function(){
+}
 BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, newValue) {
 	// if(this.templatePromise != null) {
 	// 	this.attributeChangedCallbackTimeout = setTimeout(this.attributeChangedCallback.bind(this, name, oldValue, newValue), 500);
@@ -67,5 +67,3 @@ BackgroundImage.prototype.attributeChangedCallback = function(name, oldValue, ne
 	}
 }
 
-BackgroundImage.prototype.connectedCallback = function(){
-}

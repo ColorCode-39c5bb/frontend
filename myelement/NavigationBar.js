@@ -1,40 +1,38 @@
 import templatePromise from "../template.js";
 templatePromise.then((templateDocument)=>{
-	NavigationBar.prototype.template = templateDocument.getElementById("navigation-bar");
+	NavigationBar.template = templateDocument.getElementById("navigation-bar");
 	window.constructor_customelement.push(NavigationBar);
 });
+export default function NavigationBar(){
+	const _this = Reflect.construct(HTMLElement, [], NavigationBar);
+	_this.initShadowRoot(NavigationBar);
+	_this.elements_todo={};
 
-export default class NavigationBar extends HTMLElement {
-static get observedAttributes() {return ["currentPage"];}
-
-constructor() { super(); 
-	this.attachShadow({mode: "open"});
-	this.initShadowRoot();
-
-
-	const currentPageBar = this.shadowRoot.getElementById("current-page-bar"),
-		switchButton = this.shadowRoot.getElementById("page-button"),
-		navigationpage = this.querySelector("[slot='navigation-page']");
+	const currentPageBar = _this.shadowRoot.getElementById("current-page-bar"),
+		switchButton = _this.shadowRoot.getElementById("page-button"),
+		navigationpage = _this.querySelector("[slot='navigation-page']");
 
 	navigationpage.setAttribute("popover", "");
 	switchButton.addEventListener("click", (e)=>{
 		navigationpage.showPopover();
 	});
 	window.addEventListener("mousemove", (e)=>{
-		if(e.clientY < 33) this.style.top = "0px";
-		if(e.clientY > 60) this.style.top = "-66px";
+		if(e.clientY < 33) _this.style.top = "0px";
+		if(e.clientY > 60) _this.style.top = "-66px";
 	});	
 	window.addEventListener("routechange", (e)=>{
 		currentPageBar.innerText = window.history.state.currentPage;
 		navigationpage.hidePopover();
 	});
+	return _this;
 }
-
-	
-attributeChangedCallback(name, oldValue, newValue) {
+Object.setPrototypeOf(NavigationBar.prototype, HTMLElement.prototype); Object.setPrototypeOf(NavigationBar, HTMLElement);
+Object.defineProperty(NavigationBar, "observedAttributes", {get: function() {return []}});
+NavigationBar.prototype.connectedCallback = function(){
 }
-
-connectedCallback() {
-
+NavigationBar.prototype.attributeChangedCallback = function(name, oldValue, newValue){
 }
+NavigationBar.prototype.disconnectedCallback = function(){
+}
+NavigationBar.prototype.adoptedCallback = function(){
 }
